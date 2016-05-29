@@ -1,27 +1,35 @@
 import React from 'react';
+import config from '../config';
+import xhr from 'xhr';
 
-class ThreeAndD extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {likesCount : 0};
-    this.onLike = this.onLike.bind(this);
-  }
 
-  onLike () {
-    let newLikesCount = this.state.likesCount + 1;
-    this.setState({likesCount: newLikesCount});
-  }
+var ThreeAndD = React.createClass({
 
-  render() {
+  getInitialState: function (){
+    return { data: {}};
+  },
+
+  componentDidMount: function(){
+
+  },
+
+  componentWillUpdate: function(nextProps, nextState){
+
+  },
+
+  drawChart: function(){
+
+  }, 
+
+  render: function() {
+    console.log("CONFIG")
+    console.log(config.api)
     return (
-      <div>
-        Likes : <span>{this.state.likesCount}</span>
-        <div><button onClick={this.onLike}>Like Me</button></div>
-      </div>
+      <div><h3>Three-And-D</h3></div>
     );
   }
 
-}
+});
 
 export default ThreeAndD;
