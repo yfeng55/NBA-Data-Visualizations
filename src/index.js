@@ -11,7 +11,7 @@ var App = React.createClass({
 		        <div id="sidebar-wrapper">
 		            <ul className="sidebar-nav">
 		                <li id="sidebar-brand"><Link to="">
-		                	<img src="../imgs/bball-filled.svg" width="27px" height="27px" />3&D</Link>
+		                	<img src="../assets/imgs/bball-filled.svg" width="27px" height="27px" />3&D</Link>
 		                </li>
 		                
 		                <li><Link to="/three-and-d">3PT% vs. Defensive Rating</Link></li>
