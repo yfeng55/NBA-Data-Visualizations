@@ -10,7 +10,10 @@ var App = React.createClass({
 		    <div id="wrapper">
 		        <div id="sidebar-wrapper">
 		            <ul className="sidebar-nav">
-		                <li id="sidebar-brand"><Link to="">3&D</Link></li>
+		                <li id="sidebar-brand"><Link to="">
+		                	<img src="../imgs/bball-filled.svg" width="27px" height="27px" />3&D</Link>
+		                </li>
+		                
 		                <li><Link to="/three-and-d">3PT% vs. Defensive Rating</Link></li>
 		                <li><Link to="chart-2">Chart 2</Link></li>
 		                <li><Link to="chart-3">Chart 3</Link></li>

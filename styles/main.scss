@@ -2,13 +2,22 @@
 @import 'sidebar';
 @import '_colors';
 
-h3{
-  font-family: sans-serif;
-  color: blue;
-  font-size: 20px;
-}
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,700,800,900,500,300,100,200);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,800,900,500,300,100,200);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100);
+
 
 body{
+	font-family: 'Lato', sans-serif;
 }
+
+h3{
+  color: $dark-gray;
+  font-size: 22px;
+  font-family: 'Roboto Slab', sans-serif;
+  font-weight: 600;
+}
+
+
 
 

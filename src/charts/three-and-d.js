@@ -26,7 +26,7 @@ var ThreeAndD = React.createClass({
     console.log("CONFIG")
     console.log(config.api)
     return (
-      <div><h3>Three-And-D</h3></div>
+      <div><h3>3PT% vs. Defensive Rating</h3></div>
     );
   }
 
