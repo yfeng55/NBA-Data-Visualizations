@@ -15,7 +15,7 @@ var App = React.createClass({
 		                </li>
 		                
 		                <li><Link to="/three-and-d">3PT% vs. Defensive Rating</Link></li>
-		                <li><Link to="chart-2">Chart 2</Link></li>
+		                <li><Link to="chart-2">K-Means Clustering of Players</Link></li>
 		                <li><Link to="chart-3">Chart 3</Link></li>
 		                <li><Link to="chart-4">Chart 4</Link></li>
 		                <li><Link to="chart-5">Chart 5</Link></li>

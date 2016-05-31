@@ -78,16 +78,21 @@ else:
 		player_obj['player_id'] = i
 
 
-		try:
+		if profile_stats:
 			player_obj['player_name'] = profile_stats[0][1]
 			player_obj['stats'] = profile_stats[0]
 
-		except IndexError as e:
-			print("empty stats object for this season")
+		else:
+			print(">> empty stats object for this season")
 
-			player_obj['player_name'] = result_sets[1]['rowSet'][0][1]
-			player_obj['stats'] = []
-		
+			try:
+				player_obj['player_name'] = result_sets[1]['rowSet'][0][1]
+				player_obj['stats'] = []
+			except IndexError as e:
+				player_obj['player_name'] = None
+				player_obj['stats'] = []
+				print(">> no stats available for this player")
+
 
 		output['data'].append(player_obj)
 
