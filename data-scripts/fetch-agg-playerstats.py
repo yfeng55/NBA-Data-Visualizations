@@ -96,8 +96,12 @@ else:
 		print('waiting for 3 seconds... ')
 
 
+		# write to partial file
+		with open('../data-local/agg-playerstats/agg-playerstats_' + season + '_partial.json', 'w') as partial_outfile:
+			json.dump(output, partial_outfile)
 
-	# output json object to file 
+
+	# output complete json object to file 
 	with open('../data-local/agg-playerstats/agg-playerstats_' + season + '.json', 'w') as outfile:
 		json.dump(output, outfile)
 
