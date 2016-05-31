@@ -71,18 +71,29 @@ else:
 		player_response = requests.get(url_player_profile, headers=headers)
 		player_response.raise_for_status()
 
-		profile_stats = player_response.json()['resultSets'][0]['rowSet']
+		result_sets = player_response.json()['resultSets']
+		profile_stats = result_sets[0]['rowSet']
 
 		player_obj = {}
 		player_obj['player_id'] = i
-		player_obj['player_name'] = profile_stats[0][1]
-		player_obj['stats'] = profile_stats[0]
+
+
+		try:
+			player_obj['player_name'] = profile_stats[0][1]
+			player_obj['stats'] = profile_stats[0]
+
+		except IndexError as e:
+			print("empty stats object for this season")
+
+			player_obj['player_name'] = result_sets[1]['rowSet'][0][1]
+			player_obj['stats'] = []
+		
 
 		output['data'].append(player_obj)
 
-		# wait for 5 seconds before fetching the next player
-		time.sleep(5)
-		print('waiting for 5 seconds... ')
+		# wait for 3 seconds before fetching the next player
+		time.sleep(3)
+		print('waiting for 3 seconds... ')
 
 
 
