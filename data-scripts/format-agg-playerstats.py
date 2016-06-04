@@ -79,9 +79,14 @@ for player in output['data']:
 				prev_player = as_name
 				count += 1
 
-				player['advancedstats'] = row[7:19] + row[20:24] + row[25:29];
+				as_list = row[7:19] + row[20:24] + row[25:29]
 
-
+				player['advancedstats'] = []
+				for val in as_list:
+					if(val == ''):
+						player['advancedstats'].append(None)
+					else:
+						player['advancedstats'].append(float(val))
 
 
 print("COUNT: " + str(count))
