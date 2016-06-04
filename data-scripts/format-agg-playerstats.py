@@ -52,13 +52,12 @@ for player in agg_playerstats['data']:
 
 
 
+
 # load nba advanced stats CSV file
 advancedstats_file = open('../data-local/nba_2016_advanced.csv')
-csv_reader = csv.reader(advancedstats_file)
+as_reader = csv.reader(advancedstats_file)
 
 # loop through the advanced stats CSV file and append advanced stats fields to player obj
-
-count = 0
 for player in output['data']:
 
 	# reset position of read position
@@ -66,7 +65,7 @@ for player in output['data']:
 	
 	prev_player = None;
 	# find the current player in advanced stats records
-	for row in csv_reader:
+	for row in as_reader:
 
 		if(len(row) > 1):
 			as_name = ''.join(row[1].split()).lower()
@@ -77,11 +76,10 @@ for player in output['data']:
 				# print('found a match!' + row[1])
 				player['position'] = row[2]
 				prev_player = as_name
-				count += 1
 
 				as_list = row[7:19] + row[20:24] + row[25:29]
-
 				player['advancedstats'] = []
+
 				for val in as_list:
 					if(val == ''):
 						player['advancedstats'].append(None)
@@ -89,9 +87,40 @@ for player in output['data']:
 						player['advancedstats'].append(float(val))
 
 
+
+# load nba advanced stats CSV file
+per100stats_file = open('../data-local/nba_2016_per100.csv')
+per100_reader = csv.reader(per100stats_file)
+
+# loop through the per100 stats CSV file and append advanced stats fields to player obj
+count = 0
+for player in output['data']:
+
+	# reset position of read position
+	per100stats_file.seek(0)
+	
+	prev_player = None;
+	# find the current player in per100 stats records
+	for row in per100_reader:
+
+		if(len(row) > 1):
+			as_name = ''.join(row[1].split()).lower()
+			output_name = ''.join(str(player['player_name']).split()).lower()
+
+			if(as_name == output_name and prev_player != as_name):
+				prev_player = as_name
+				count += 1
+
+				per100_list = row[8:29] + row[30:32]
+
+				player['per100stats'] = []
+				for val in per100_list:
+					if(val == ''):
+						player['per100stats'].append(None)
+					else:
+						player['per100stats'].append(float(val))
+
 print("COUNT: " + str(count))
-
-
 
 
 
