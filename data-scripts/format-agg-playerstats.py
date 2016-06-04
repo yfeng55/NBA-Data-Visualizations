@@ -47,16 +47,45 @@ for player in agg_playerstats['data']:
 			new_playerobj['endYear'] = playerprofile[5]
 			new_playerobj['hasPlayed'] = playerprofile[12]
 
-	print(new_playerobj)
+	# print(new_playerobj)
 	output['data'].append(new_playerobj)
 
 
 
 # load nba advanced stats CSV file
-with open('../data-local/nba_2016_advanced.csv', 'rb') as advacedstats_file:
-	advancedstats = csv.reader(advancedstats_file, delimiter=' ', quotechar='|')
+advancedstats_file = open('../data-local/nba_2016_advanced.csv')
+csv_reader = csv.reader(advancedstats_file)
 
-	# loop through the advanced stats CSV file, take the DER for each player, and add DER for each player obj
+# loop through the advanced stats CSV file and append advanced stats fields to player obj
+
+count = 0
+for player in output['data']:
+
+	# reset position of read position
+	advancedstats_file.seek(0)
+	
+	prev_player = None;
+	# find the current player in advanced stats records
+	for row in csv_reader:
+
+		if(len(row) > 1):
+			as_name = ''.join(row[1].split()).lower()
+			output_name = ''.join(str(player['player_name']).split()).lower()
+
+			if(as_name == output_name and prev_player != as_name):
+
+				# print('found a match!' + row[1])
+				player['position'] = row[2]
+				prev_player = as_name
+				count += 1
+
+				player['advancedstats'] = row[7:19] + row[20:24] + row[25:29];
+
+
+
+
+print("COUNT: " + str(count))
+
 
 
 
