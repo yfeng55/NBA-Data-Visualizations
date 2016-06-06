@@ -7,3 +7,14 @@
 	background-color: $lighter-gray;
 	margin-top: 20px;
 }
+
+/* Chart1 - 3andD */
+.axis path, .axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.dot {
+	stroke: #000;
+}
