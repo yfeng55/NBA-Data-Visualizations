@@ -46,7 +46,7 @@ var ThreeAndD = React.createClass({
     var xVal = function(datum){
       try{
         // console.log(datum.per100stats[22])
-        return datum.per100stats[22] 
+        return parseFloat(datum.per100stats[22])
       }catch(e){
         return 0
       }
@@ -56,7 +56,7 @@ var ThreeAndD = React.createClass({
     var yVal = function(datum){ 
       try{
         // console.log(datum.stats[12])
-        return datum.stats[12] 
+        return parseFloat(datum.stats[12])
       }catch(e){
         return 0
       }
@@ -99,14 +99,34 @@ var ThreeAndD = React.createClass({
         .style("text-anchor", "end")
         .text("3PT %");
 
+    // create tooltip element
+    var tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
     // add dots for all elements in the dataset 
     data.forEach(function(datum){
+
       svg.append("circle")
         .attr("class", "dot")
         .attr("r", 3.5)
         .attr("cx", xScale(xVal(datum)))
         .attr("cy", yScale(yVal(datum)))
-        .style("fill", "blue") 
+        .style("fill", "blue")
+        .on("mouseover", function(){
+            tooltip.transition()
+              .duration(100)
+              .style("opacity", 1);
+            tooltip.html(datum['player_name'])
+              .style("left", (d3.event.pageX + 5) + "px")
+              .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(){
+          tooltip.transition()
+          .duration(100)
+          .style("opacity", 0);
+        }.bind(this));
+
     }.bind(this));
 
 
