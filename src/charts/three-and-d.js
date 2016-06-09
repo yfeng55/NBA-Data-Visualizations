@@ -31,7 +31,7 @@ var ThreeAndD = React.createClass({
     console.log(data);
 
     // chart dimensions
-    var p = 50, w = 960, h = 350;    
+    var p = 50, w = 960, h = 450;    
 
     // add canvas element
     var svg = d3.select("#chart1-3andd").append("svg")
@@ -72,6 +72,10 @@ var ThreeAndD = React.createClass({
 
     var xScale = d3.scale.linear().domain([d3.min(data, xVal), d3.max(data, xVal)]).range([0, w]);
     var yScale = d3.scale.linear().domain([d3.min(data, yVal), d3.max(data, yVal)]).range([h, 0]);
+    var circleRadius = function(mpg){
+      console.log(mpg)
+      return mpg/30 * 7 + 1; 
+    }
 
     // add x/y axis
     var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
@@ -109,10 +113,11 @@ var ThreeAndD = React.createClass({
 
       svg.append("circle")
         .attr("class", "dot")
-        .attr("r", 3.5)
+        .attr("r", circleRadius(datum.stats[6]))
         .attr("cx", xScale(xVal(datum)))
         .attr("cy", yScale(yVal(datum)))
         .style("fill", "blue")
+        .style("opacity", .7)
         .on("mouseover", function(){
             tooltip.transition()
               .duration(100)
