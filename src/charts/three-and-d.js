@@ -2,6 +2,7 @@ import React from 'react';
 import config from '../config';
 import xhr from 'xhr';
 import d3 from 'd3';
+import chartUtil from '../util/chart-util';
 
 
 var ThreeAndD = React.createClass({
@@ -116,7 +117,7 @@ var ThreeAndD = React.createClass({
         .attr("r", circleRadius(datum.stats[6]))
         .attr("cx", xScale(xVal(datum)))
         .attr("cy", yScale(yVal(datum)))
-        .style("fill", "blue")
+        .style("fill", chartUtil.getTeamColors(datum.team).primary)
         .style("opacity", .7)
         .on("mouseover", function(){
             tooltip.transition()
