@@ -15,10 +15,10 @@ var App = React.createClass({
 		                </li>
 		                
 		                <li><Link to="/three-and-d">3PT% vs. Defensive Rating</Link></li>
-		                <li><Link to="chart-2">Player/Prospect Clustering</Link></li>
-		                <li><Link to="chart-3">Chart 3</Link></li>
-		                <li><Link to="chart-4">Chart 4</Link></li>
-		                <li><Link to="chart-5">Chart 5</Link></li>
+		                <li><Link to="chart-2">Player Volume Breakdown</Link></li>
+		                <li><Link to="chart-3">Player Stats Career Progression</Link></li>
+		                <li><Link to="chart-4">Player Output vs. Salary</Link></li>
+		                <li><Link to="chart-5">Player/Prospect Clustering</Link></li>
 		            </ul>
 		        </div>
 

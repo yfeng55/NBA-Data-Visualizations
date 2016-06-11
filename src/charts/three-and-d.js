@@ -74,7 +74,6 @@ var ThreeAndD = React.createClass({
     var xScale = d3.scale.linear().domain([d3.min(data, xVal), d3.max(data, xVal)]).range([0, w]);
     var yScale = d3.scale.linear().domain([d3.min(data, yVal), d3.max(data, yVal)]).range([h, 0]);
     var circleRadius = function(mpg){
-      console.log(mpg)
       return mpg/30 * 7 + 1; 
     }
 
@@ -118,6 +117,8 @@ var ThreeAndD = React.createClass({
         .attr("cx", xScale(xVal(datum)))
         .attr("cy", yScale(yVal(datum)))
         .style("fill", chartUtil.getTeamColors(datum.team).primary)
+        .style("stroke", chartUtil.getTeamColors(datum.team).secondary)
+
         .style("opacity", .7)
         .on("mouseover", function(){
             tooltip.transition()
