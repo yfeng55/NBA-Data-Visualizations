@@ -12,13 +12,11 @@ var ThreeAndD = React.createClass({
   },
 
   componentDidMount: function(){
-    
     var apiurl = config.api + '/agg_playerstats'
     xhr.get(apiurl, function(err, resp){
       var resp_obj = JSON.parse(resp.body)[0]
       this.setState({data_obj: resp_obj});
     }.bind(this))
-
   },
 
   componentWillUpdate: function(nextProps, nextState){
