@@ -5,10 +5,10 @@ var ChartUtil = {
         switch(teamkey){
             case 'ATL':
                 return {primary: "#E13A3E", secondary: "#C4D600"};
-            case 'BKN': 
-                return {primary: "#061922", secondary: "#FFFFFF"};
             case 'BOS': 
                 return {primary: "#008348", secondary: "#FFFFFF"};
+            case 'BKN': 
+                return {primary: "#061922", secondary: "#FFFFFF"};
             case 'CHA': 
                 return {primary: "#1D1160", secondary: "#008CA8"};
             case 'CHI': 

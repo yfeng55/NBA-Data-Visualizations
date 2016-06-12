@@ -8,23 +8,35 @@ import chartUtil from '../util/chart-util';
 var ThreeAndD = React.createClass({
 
   getInitialState: function (){
-    return { data_obj: {}};
+    return { season_select: "2015-16", team_select: "All Teams", team_obj: {}, data_obj: {}};
   },
 
   componentDidMount: function(){
-    var apiurl = config.api + '/agg_playerstats'
-    xhr.get(apiurl, function(err, resp){
-      var resp_obj = JSON.parse(resp.body)[0]
-      this.setState({data_obj: resp_obj});
+
+    // get player stats
+    var playerstatsurl = config.api + '/agg_playerstats'
+    xhr.get(playerstatsurl, function(err, resp){
+      var playerstats_obj = JSON.parse(resp.body)[0]
+      this.setState({data_obj: playerstats_obj});
+
+      // get team list
+      var teamsurl = config.api + '/activeteams'
+      xhr.get(teamsurl, function(err, resp){
+        var teams_obj = JSON.parse(resp.body)[0]
+        this.setState({team_obj: teams_obj});
+      }.bind(this))
+
     }.bind(this))
+
   },
 
   componentWillUpdate: function(nextProps, nextState){
-    this.drawChart(nextState.data_obj.data);
+    this.drawChart(nextState.data_obj.data, nextState.team_select);
   },
 
 
-  drawChart: function(data){
+  drawChart: function(data, teamselect){
+    d3.select("svg").remove();
 
     console.log("drawChart()");
     console.log(data);
@@ -40,11 +52,9 @@ var ThreeAndD = React.createClass({
       .attr("transform", "translate(" + p + "," + p + ")");
 
     // define accessor functions
-
     // defensive rating
     var xVal = function(datum){
       try{
-        // console.log(datum.per100stats[22])
         return parseFloat(datum.per100stats[22])
       }catch(e){
         return 0
@@ -109,41 +119,65 @@ var ThreeAndD = React.createClass({
     // add dots for all elements in the dataset 
     data.forEach(function(datum){
 
-      svg.append("circle")
-        .attr("class", "dot")
-        .attr("r", circleRadius(datum.stats[6]))
-        .attr("cx", xScale(xVal(datum)))
-        .attr("cy", yScale(yVal(datum)))
-        .style("fill", chartUtil.getTeamColors(datum.team).primary)
-        .style("stroke", chartUtil.getTeamColors(datum.team).secondary)
+      if(datum.team == teamselect || teamselect == "All Teams"){
 
-        .style("opacity", .7)
-        .on("mouseover", function(){
+        svg.append("circle")
+          .attr("class", "dot")
+          .attr("r", circleRadius(datum.stats[6]))
+          .attr("cx", xScale(xVal(datum)))
+          .attr("cy", yScale(yVal(datum)))
+          .style("fill", chartUtil.getTeamColors(datum.team).primary)
+          .style("stroke", chartUtil.getTeamColors(datum.team).secondary)
+
+          .style("opacity", .7)
+          .on("mouseover", function(){
+              tooltip.transition()
+                .duration(100)
+                .style("opacity", 1);
+              tooltip.html(datum['player_name'])
+                .style("left", (d3.event.pageX + 5) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function(){
             tooltip.transition()
-              .duration(100)
-              .style("opacity", 1);
-            tooltip.html(datum['player_name'])
-              .style("left", (d3.event.pageX + 5) + "px")
-              .style("top", (d3.event.pageY - 28) + "px");
-        })
-        .on("mouseout", function(){
-          tooltip.transition()
-          .duration(100)
-          .style("opacity", 0);
-        }.bind(this));
+            .duration(100)
+            .style("opacity", 0);
+          }.bind(this));
 
+      }
+      
     }.bind(this));
-
-
 
   }, 
 
+  onSelect: function(event){
+    this.setState({team_select: event.target.value});
+  },
 
   render: function() {
+
+    const teamoptions = []
+
+    if(this.state.team_obj.teams){
+      var teamkeys = Object.keys(this.state.team_obj.teams)
+      teamkeys.forEach(function(key){
+        teamoptions.push(<option value={key}>{key}</option>)
+      }.bind(this))
+    }
+
     return (
       <div>
         <h3>3PT% vs. Defensive Rating</h3>
-        <div id="chart1-3andd" className="chart"></div>
+
+        <div id="chart1-3andd" className="chart">
+
+          <select defaultValue="All Teams" onChange={this.onSelect}>
+            <option>All Teams</option>
+            {teamoptions}
+          </select>
+        
+        </div>
+      
       </div>
     );
   }
@@ -151,3 +185,32 @@ var ThreeAndD = React.createClass({
 });
 
 export default ThreeAndD;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
