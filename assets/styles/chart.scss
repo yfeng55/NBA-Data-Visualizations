@@ -31,12 +31,36 @@
 
 .tooltip{
 	padding: 8px;
-	height: 200px;
+	min-height: 210px;
+	min-width: 230px;
+	border-radius: 5px;
+	display: table;
 
-	.profile_img{
-		width: 80px;
-		height: 80px;
-		float: left;
+
+	p{
+		margin: 3px;
 	}
-
+	.profile_img{
+		width: 85px;
+		height: 85px;
+		float: left;
+		margin-right: 5px;
+		margin-bottom: 5px;
+	}
+	.header{
+		display: inline-block;
+		color: $light-gray;
+		font-size: 12px;
+		font-family: 'Roboto Slab', sans-serif;
+		&.top{
+			min-width: 80px;
+		}
+		&.bottom{
+			min-width: 130px;
+		}
+		&.name{
+			font-size: 14px;
+			margin-bottom: 8px;
+		}
+	}
 }

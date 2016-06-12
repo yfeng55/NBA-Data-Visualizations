@@ -55,7 +55,7 @@ var ThreeAndD = React.createClass({
     // defensive rating
     var xVal = function(datum){
       try{
-        return parseFloat(datum.per100stats[22])
+        return 1 / parseFloat(datum.per100stats[22])
       }catch(e){
         return 0
       }
@@ -96,7 +96,7 @@ var ThreeAndD = React.createClass({
         .attr("x", w)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("Defensive Rating");
+        .text("1 / Defensive Rating");
 
     // y-axis
     var yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -137,7 +137,7 @@ var ThreeAndD = React.createClass({
                 .duration(100)
                 .style("opacity", 1);
               tooltip.html(chartUtil.getTooltipHTML(datum))
-                .style("left", (d3.event.pageX + 5) + "px")
+                .style("left", (d3.event.pageX - 230) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
           })
           .on("mouseout", function(){

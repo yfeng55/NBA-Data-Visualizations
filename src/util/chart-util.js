@@ -85,9 +85,17 @@ var ChartUtil = {
         var output = "";
 
         output += "<span>" + "<img class='profile_img' src='../../assets/imgs/profilepics/small/" + player['player_id'] + ".png' />" + "</span>";
-        output += "<p>" + player['player_name'] + "</p>";
-        output += "<p> position:" + player['position'] + "</p>";
-        output += "<p> min per game:" + player.stats[6] + "</p>";
+        output += "<p><span class='header name'>" + player['player_name'] + "</span></p>";
+        output += "<p><span class='header top'> position: </span>" + player['position'] + "</p>";
+        output += "<p><span class='header top'> min/game: </span>" + player.stats[6].toFixed(1) + "</p>";
+        output += "<p><span class='header top'> 3P %: </span>" + player.stats[12].toFixed(3) + "</p>";
+        output += "<p><span class='header bottom'> 3P attemps/game: </span>" + player.stats[11].toFixed(1) + "</p>";
+        output += "<p><span class='header bottom'> points/game: </span>" + player.stats[26].toFixed(1) + "</p>";
+        output += "<p><span class='header bottom'> rebounds/game: </span>" + player.stats[18].toFixed(1) + "</p>";
+        output += "<p><span class='header bottom'> blocks/game: </span>" + player.stats[22].toFixed(1) + "</p>";
+        output += "<p><span class='header bottom'> steals/game: </span>" + player.stats[21].toFixed(1) + "</p>";
+        
+
 
         return output;
     }
