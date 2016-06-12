@@ -69,8 +69,28 @@ var ChartUtil = {
         }
 	},
 
+    containsPosition: function(position, selected_position){
+        if(position == selected_position){
+            return true;
+        }
+        var firstsubstr = selected_position.substr(0, selected_position.indexOf('/'));
+        var secondsubstr = selected_position.substr(selected_position.indexOf('/')+1, selected_position.length);
+        if(firstsubstr == position || secondsubstr == position){
+            return true;
+        }
+        return false;
+    },
 
+    getTooltipHTML: function(player){
+        var output = "";
 
+        output += "<span>" + "<img class='profile_img' src='../../assets/imgs/profilepics/small/" + player['player_id'] + ".png' />" + "</span>";
+        output += "<p>" + player['player_name'] + "</p>";
+        output += "<p> position:" + player['position'] + "</p>";
+        output += "<p> min per game:" + player.stats[6] + "</p>";
+
+        return output;
+    }
 
 
 };

@@ -8,7 +8,7 @@ import chartUtil from '../util/chart-util';
 var ThreeAndD = React.createClass({
 
   getInitialState: function (){
-    return { season_select: "2015-16", team_select: "All Teams", team_obj: {}, data_obj: {}};
+    return { season_select: "2015-16", team_select: "All Teams", position_select: "SG/SF", team_obj: {}, data_obj: {}};
   },
 
   componentDidMount: function(){
@@ -31,11 +31,11 @@ var ThreeAndD = React.createClass({
   },
 
   componentWillUpdate: function(nextProps, nextState){
-    this.drawChart(nextState.data_obj.data, nextState.team_select);
+    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select);
   },
 
 
-  drawChart: function(data, teamselect){
+  drawChart: function(data, teamselect, positionselect){
     d3.select("svg").remove();
 
     console.log("drawChart()");
@@ -119,7 +119,9 @@ var ThreeAndD = React.createClass({
     // add dots for all elements in the dataset 
     data.forEach(function(datum){
 
-      if(datum.team == teamselect || teamselect == "All Teams"){
+      // filter by team and position
+      if( (datum.team == teamselect || teamselect == "All Teams") && 
+          (chartUtil.containsPosition(datum.position, positionselect) || positionselect == "All Positions") ){
 
         svg.append("circle")
           .attr("class", "dot")
@@ -134,7 +136,7 @@ var ThreeAndD = React.createClass({
               tooltip.transition()
                 .duration(100)
                 .style("opacity", 1);
-              tooltip.html(datum['player_name'])
+              tooltip.html(chartUtil.getTooltipHTML(datum))
                 .style("left", (d3.event.pageX + 5) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
           })
@@ -150,8 +152,11 @@ var ThreeAndD = React.createClass({
 
   }, 
 
-  onSelect: function(event){
+  onSelectTeam: function(event){
     this.setState({team_select: event.target.value});
+  },
+  onSelectPosition: function(event){
+    this.setState({position_select: event.target.value});
   },
 
   render: function() {
@@ -171,11 +176,28 @@ var ThreeAndD = React.createClass({
 
         <div id="chart1-3andd" className="chart">
 
-          <select defaultValue="All Teams" onChange={this.onSelect}>
+          <select defaultValue="All Teams" onChange={this.onSelectTeam}>
             <option>All Teams</option>
             {teamoptions}
           </select>
-        
+          
+          <select defaultValue="2015-16">
+            <option>2015-16</option>
+            <option>2014-15</option>
+            <option>2013-14</option>
+          </select>
+
+          <select defaultValue="SG/SF" onChange={this.onSelectPosition}>
+            <option>SG/SF</option>
+            <option>All Positions</option>
+            <option>PG</option>
+            <option>SG</option>
+            <option>SF</option>
+            <option>PF</option>
+            <option>C</option>
+          </select>
+
+
         </div>
       
       </div>

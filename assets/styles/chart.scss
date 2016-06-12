@@ -28,3 +28,15 @@
 .dot{
 	stroke-width: 2px;
 }
+
+.tooltip{
+	padding: 8px;
+	height: 200px;
+
+	.profile_img{
+		width: 80px;
+		height: 80px;
+		float: left;
+	}
+
+}
