@@ -20,6 +20,10 @@ var App = React.createClass({
 		                <li><Link to="chart-4">Player Output vs. Salary</Link></li>
 		                <li><Link to="chart-5">Player/Prospect Clustering</Link></li>
 		            </ul>
+
+		            <div id="footer">
+		            	<a href="#">Datasets</a> | <a href="#">Contact</a>
+		            </div>
 		        </div>
 
 		        <div id="page-content-wrapper"><div className="container-fluid"><div className="row"><div className="col-lg-12">

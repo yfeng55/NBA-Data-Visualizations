@@ -183,42 +183,46 @@ var ThreeAndD = React.createClass({
       <div>
         <h3>3PT% vs. Defensive Rating</h3>
 
-        <div id="chart1-3andd" className="chart">
+        <div className="chart-container">
 
-          <select defaultValue="All Teams" onChange={this.onSelectTeam}>
-            <option>All Teams</option>
-            {teamoptions}
-          </select>
-          
-          <select defaultValue="2015-16">
-            <option>2015-16</option>
-            <option>2014-15</option>
-            <option>2013-14</option>
-          </select>
+          <div className="filters-container">
+            <select defaultValue="All Teams" onChange={this.onSelectTeam}>
+              <option>All Teams</option>
+              {teamoptions}
+            </select>
+            
+            <select defaultValue="2015-16">
+              <option>2015-16</option>
+              <option>2014-15</option>
+              <option>2013-14</option>
+            </select>
 
-          <select defaultValue="SG/SF" onChange={this.onSelectPosition}>
-            <option>SG/SF</option>
-            <option>All Positions</option>
-            <option>PG</option>
-            <option>SG</option>
-            <option>SF</option>
-            <option>PF</option>
-            <option>C</option>
-          </select>
+            <select defaultValue="SG/SF" onChange={this.onSelectPosition}>
+              <option>SG/SF</option>
+              <option>All Positions</option>
+              <option>PG</option>
+              <option>SG</option>
+              <option>SF</option>
+              <option>PF</option>
+              <option>C</option>
+            </select>
 
-          <select defaultValue="> 0.0 3P Made" onChange={this.onSelectMin3PM}>
-            <option>>= 0.0 3PM/Game</option>
-            <option>>= 0.5 3PM/Game</option>
-            <option>>= 1.0 3PM/Game</option>
-            <option>>= 1.5 3PM/Game</option>
-            <option>>= 2.0 3PM/Game</option>
-            <option>>= 2.5 3PM/Game</option>
-            <option>>= 3.0 3PM/Game</option>
-          </select>
+            <select defaultValue="> 0.0 3P Made" onChange={this.onSelectMin3PM}>
+              <option>>= 0.0 3PM/Game</option>
+              <option>>= 0.5 3PM/Game</option>
+              <option>>= 1.0 3PM/Game</option>
+              <option>>= 1.5 3PM/Game</option>
+              <option>>= 2.0 3PM/Game</option>
+              <option>>= 2.5 3PM/Game</option>
+              <option>>= 3.0 3PM/Game</option>
+            </select>
+          </div>
 
-
+          <div id="chart1-3andd" className="chart"></div>
+        
         </div>
-      
+
+
       </div>
     );
   }

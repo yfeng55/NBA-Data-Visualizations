@@ -1,11 +1,19 @@
 @import '_colors';
 
 
+.chart-container{
+	background-color: $lighter-gray;
+	margin-top: 20px;
+	padding-top: 10px;
+
+	select{
+		margin-left: 10px;
+	}
+}
 .chart{
 	min-height: 300px;
 	width: 100%;
 	background-color: $lighter-gray;
-	margin-top: 20px;
 	font-size: 12px;
 }
 
@@ -65,3 +73,20 @@
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
