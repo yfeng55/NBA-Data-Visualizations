@@ -2,6 +2,7 @@ import React from 'react';
 import config from '../config';
 import xhr from 'xhr';
 import d3 from 'd3';
+import $ from 'jquery';
 import chartUtil from '../util/chart-util';
 
 
@@ -13,6 +14,7 @@ var ThreeAndD = React.createClass({
   },
 
   componentDidMount: function(){
+    $("#loading-spinner").show();
 
     // get player stats
     var playerstatsurl = config.api + '/agg_playerstats'
@@ -29,10 +31,12 @@ var ThreeAndD = React.createClass({
 
     }.bind(this))
 
+
   },
 
   componentWillUpdate: function(nextProps, nextState){
     this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
+    $("#loading-spinner").hide();
   },
 
 
@@ -154,7 +158,6 @@ var ThreeAndD = React.createClass({
         }.bind(this));
 
     }.bind(this));
-
   }, 
 
   onSelectTeam: function(event){
@@ -181,23 +184,26 @@ var ThreeAndD = React.createClass({
 
     return (
       <div>
+
         <h3>3PT% vs. Defensive Rating</h3>
 
         <div className="chart-container">
 
+          <div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../assets/imgs/bball-outline.svg" /></div>
+
           <div className="filters-container">
-            <select defaultValue="All Teams" onChange={this.onSelectTeam}>
+            <select className="select-filter" defaultValue="All Teams" onChange={this.onSelectTeam}>
               <option>All Teams</option>
               {teamoptions}
             </select>
             
-            <select defaultValue="2015-16">
+            <select className="select-filter" defaultValue="2015-16">
               <option>2015-16</option>
               <option>2014-15</option>
               <option>2013-14</option>
             </select>
 
-            <select defaultValue="SG/SF" onChange={this.onSelectPosition}>
+            <select className="select-filter" defaultValue="SG/SF" onChange={this.onSelectPosition}>
               <option>SG/SF</option>
               <option>All Positions</option>
               <option>PG</option>
@@ -207,7 +213,7 @@ var ThreeAndD = React.createClass({
               <option>C</option>
             </select>
 
-            <select defaultValue="> 0.0 3P Made" onChange={this.onSelectMin3PM}>
+            <select className="select-filter" defaultValue="> 0.0 3P Made" onChange={this.onSelectMin3PM}>
               <option>>= 0.0 3PM/Game</option>
               <option>>= 0.5 3PM/Game</option>
               <option>>= 1.0 3PM/Game</option>
