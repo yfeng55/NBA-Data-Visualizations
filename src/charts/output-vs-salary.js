@@ -8,7 +8,7 @@ import chartUtil from '../util/chart-util';
 var OutputVsSalary = React.createClass({
 
   getInitialState: function (){
-    return { season_select: "2015-16", team_select: "All Teams", position_select: "SG/SF", min3pm_select: 0.0,
+    return { season_select: "2015-16", team_select: "All Teams", position_select: "All Positions", stat_select: "PPG",
               team_obj: {}, data_obj: {}};
   },
 
@@ -33,11 +33,11 @@ var OutputVsSalary = React.createClass({
   },
 
   componentWillUpdate: function(nextProps, nextState){
-    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
+    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select);
   },
 
 
-  drawChart: function(unfiltered_data, teamselect, positionselect, min3pmselect){
+  drawChart: function(unfiltered_data, teamselect, positionselect){
     d3.select("svg").remove();
 
     //filter data
@@ -45,8 +45,7 @@ var OutputVsSalary = React.createClass({
     unfiltered_data.forEach(function(datum){
       // filter by team and position
       if( (datum.team == teamselect || teamselect == "All Teams") && 
-          (chartUtil.containsPosition(datum.position, positionselect) || positionselect == "All Positions") &&
-          (datum.stats[10] >= min3pmselect) ){
+          (chartUtil.containsPosition(datum.position, positionselect) || positionselect == "All Positions") ){
 
         data.push(datum)
       
@@ -64,20 +63,19 @@ var OutputVsSalary = React.createClass({
       .attr("transform", "translate(" + p + "," + p + ")");
 
     // define accessor functions
-    // defensive rating
+    // salary
     var xVal = function(datum){
       try{
-        return 1 / parseFloat(datum.per100stats[22])
+        return parseFloat(datum.salary.replace(/\$|,/g, ''));
       }catch(e){
         return 0
       }
     } 
 
-    // 3pt percentage
+    // (stat selection)
     var yVal = function(datum){ 
       try{
-        // console.log(datum.stats[12])
-        return parseFloat(datum.stats[12])
+        return parseFloat(datum.stats[26])
       }catch(e){
         return 0
       }
@@ -85,16 +83,16 @@ var OutputVsSalary = React.createClass({
 
     // define scales
 
-    console.log("MIN 3PT%: " + d3.min(data, yVal))
-    console.log("MAX 3PT%: " + d3.max(data, yVal))
+    console.log("MIN PPG: " + d3.min(data, yVal))
+    console.log("MAX PPG: " + d3.max(data, yVal))
 
-    console.log("MIN DRating: " + d3.min(data, xVal))
-    console.log("MAX DRating: " + d3.max(data, xVal))
+    console.log("MIN SALARY: " + d3.min(data, xVal))
+    console.log("MAX SALARY: " + d3.max(data, xVal))
 
     var xScale = d3.scale.linear().domain([d3.min(data, xVal), d3.max(data, xVal)]).range([0, w]);
-    var yScale = d3.scale.linear().domain([Math.max(d3.min(data, yVal)-0.02, 0), Math.min(d3.max(data, yVal)+0.02, 1.0)]).range([h, 0]);
+    var yScale = d3.scale.linear().domain([d3.min(data, yVal), d3.max(data, yVal)]).range([h, 0]);
     var circleRadius = function(mpg){
-      return mpg/30 * 7 + 1; 
+      return mpg/30 * 7 + 1;
     }
 
     // add x/y axis
@@ -108,7 +106,7 @@ var OutputVsSalary = React.createClass({
         .attr("x", w)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("1 / Defensive Rating");
+        .text("Player Salary");
 
     // y-axis
     var yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -121,7 +119,7 @@ var OutputVsSalary = React.createClass({
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("3PT %");
+        .text("PPG");
 
     // create tooltip element
     var tooltip = d3.select("body").append("div")
@@ -144,7 +142,7 @@ var OutputVsSalary = React.createClass({
             tooltip.transition()
               .duration(100)
               .style("opacity", 1);
-            tooltip.html(chartUtil.getTooltipHTML(datum))
+            tooltip.html(chartUtil.getTooltipHTML(datum, [{name: "Salary", value: datum.salary}]))
               .style("left", (d3.event.pageX - 230) + "px")
               .style("top", (d3.event.pageY - 28) + "px");
         })
@@ -163,10 +161,7 @@ var OutputVsSalary = React.createClass({
   onSelectPosition: function(event){
     this.setState({position_select: event.target.value});
   },
-  onSelectMin3PM: function(event){
-    var min3pm = event.target.value.split('>=')[1].split(' ')[1];
-    this.setState({min3pm_select: parseFloat(min3pm) });
-  },
+
 
   render: function() {
 
@@ -182,7 +177,7 @@ var OutputVsSalary = React.createClass({
     return (
       <div>
 
-        <h3>3PT% vs. Defensive Rating</h3>
+        <h3>Salary Vs. PPG</h3>
 
         <div className="chart-container">
 
@@ -210,15 +205,6 @@ var OutputVsSalary = React.createClass({
               <option>C</option>
             </select>
 
-            <select className="select-filter" defaultValue="> 0.0 3P Made" onChange={this.onSelectMin3PM}>
-              <option>>= 0.0 3PM/Game</option>
-              <option>>= 0.5 3PM/Game</option>
-              <option>>= 1.0 3PM/Game</option>
-              <option>>= 1.5 3PM/Game</option>
-              <option>>= 2.0 3PM/Game</option>
-              <option>>= 2.5 3PM/Game</option>
-              <option>>= 3.0 3PM/Game</option>
-            </select>
           </div>
 
           <div id="chart1-3andd" className="chart"></div>

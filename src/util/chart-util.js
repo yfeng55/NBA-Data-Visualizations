@@ -81,7 +81,9 @@ var ChartUtil = {
         return false;
     },
 
-    getTooltipHTML: function(player){
+    getTooltipHTML: function(player, fields){
+        fields = fields || [];
+
         var output = "";
 
         output += "<span>" + "<img class='profile_img' src='../../assets/imgs/profilepics/small/" + player['player_id'] + ".png' />" + "</span>";
@@ -95,7 +97,9 @@ var ChartUtil = {
         output += "<p><span class='header bottom'> blocks/game: </span>" + player.stats[22].toFixed(1) + "</p>";
         output += "<p><span class='header bottom'> steals/game: </span>" + player.stats[21].toFixed(1) + "</p>";
         
-
+        fields.forEach(function(field){
+            output += "<p><span class='header bottom'>" + field.name + "</span>" + field.value + "</p>";
+        }.bind(this));
 
         return output;
     }

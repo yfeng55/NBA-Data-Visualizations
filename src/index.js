@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
 import ThreeAndD from './charts/three-and-d'
+import OutputVsSalary from './charts/output-vs-salary'
 
 
 var App = React.createClass({
@@ -15,9 +16,9 @@ var App = React.createClass({
 		                </li>
 		                
 		                <li><Link to="/three-and-d">3PT% vs. Defensive Rating</Link></li>
-		                <li><Link to="chart-2">Player Volume Breakdown</Link></li>
+		                <li><Link to="/output-vs-salary">Player Salary vs. Output</Link></li>
 		                <li><Link to="chart-3">Player Stats Career Progression</Link></li>
-		                <li><Link to="chart-4">Player Output vs. Salary</Link></li>
+		                <li><Link to="chart-4">Player Shot Volume Breakdown</Link></li>
 		                <li><Link to="chart-5">Player/Prospect Clustering</Link></li>
 		            </ul>
 
@@ -40,7 +41,7 @@ render((
 		<Route path="/" component={App}>
 			<IndexRoute component={ThreeAndD} />
 			<Route path="three-and-d" component={ThreeAndD} />
-			<Route path="chart-2" component={ThreeAndD} />
+			<Route path="output-vs-salary" component={OutputVsSalary} />
 			<Route path="chart-3" component={ThreeAndD} />
 			<Route path="chart-4" component={ThreeAndD} />
 			<Route path="chart-5" component={ThreeAndD} />
