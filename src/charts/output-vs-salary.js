@@ -5,7 +5,7 @@ import d3 from 'd3';
 import chartUtil from '../util/chart-util';
 
 
-var ThreeAndD = React.createClass({
+var OutputVsSalary = React.createClass({
 
   getInitialState: function (){
     return { season_select: "2015-16", team_select: "All Teams", position_select: "SG/SF", min3pm_select: 0.0,
@@ -13,7 +13,6 @@ var ThreeAndD = React.createClass({
   },
 
   componentDidMount: function(){
-    //TODO: show spinner
 
     // get player stats
     var playerstatsurl = config.api + '/agg_playerstats'
@@ -35,7 +34,6 @@ var ThreeAndD = React.createClass({
 
   componentWillUpdate: function(nextProps, nextState){
     this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
-    // TODO: hide spinner
   },
 
 
@@ -234,7 +232,7 @@ var ThreeAndD = React.createClass({
 
 });
 
-export default ThreeAndD;
+export default OutputVsSalary;
 
 
 
