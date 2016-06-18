@@ -80,7 +80,7 @@
 }
 
 
-/*spinner*/
+/* spinning loader */
 .loading-spinner{
     z-index: 2000;
     height: 100%;
@@ -101,9 +101,21 @@
 }
 
 
-
-
-
+/* Chart2 - Output Vs Salary */
+.stat_select_field{
+	color: $light-blue;
+	border: 0;
+	border-bottom: 1px dotted $lighter-gray;
+	display: inline;
+	width: 150px;
+	font-size: 22px;
+	font-family: 'Roboto Slab', sans-serif;
+	font-weight: 600;
+	outline: none; 
+}
+.inline-header{
+	display: inline;
+}
 
 
 

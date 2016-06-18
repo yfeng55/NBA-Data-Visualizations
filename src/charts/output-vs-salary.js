@@ -33,11 +33,11 @@ var OutputVsSalary = React.createClass({
   },
 
   componentWillUpdate: function(nextProps, nextState){
-    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select);
+    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.stat_select);
   },
 
 
-  drawChart: function(unfiltered_data, teamselect, positionselect){
+  drawChart: function(unfiltered_data, teamselect, positionselect, statSelect){
     d3.select("svg").remove();
 
     //filter data
@@ -46,9 +46,7 @@ var OutputVsSalary = React.createClass({
       // filter by team and position
       if( (datum.team == teamselect || teamselect == "All Teams") && 
           (chartUtil.containsPosition(datum.position, positionselect) || positionselect == "All Positions") ){
-
         data.push(datum)
-      
       }
     }.bind(this))
 
@@ -75,7 +73,8 @@ var OutputVsSalary = React.createClass({
     // (stat selection)
     var yVal = function(datum){ 
       try{
-        return parseFloat(datum.stats[26])
+        // return parseFloat(datum.stats[26])
+        return parseFloat(chartUtil.getStat(statSelect, datum))
       }catch(e){
         return 0
       }
@@ -119,7 +118,7 @@ var OutputVsSalary = React.createClass({
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("PPG");
+        .text(statSelect);
 
     // create tooltip element
     var tooltip = d3.select("body").append("div")
@@ -142,7 +141,7 @@ var OutputVsSalary = React.createClass({
             tooltip.transition()
               .duration(100)
               .style("opacity", 1);
-            tooltip.html(chartUtil.getTooltipHTML(datum, [{name: "Salary", value: datum.salary}]))
+            tooltip.html(chartUtil.getTooltipHTML(datum, [{name: "Salary", value: datum.salary}] ))
               .style("left", (d3.event.pageX - 230) + "px")
               .style("top", (d3.event.pageY - 28) + "px");
         })
@@ -162,6 +161,11 @@ var OutputVsSalary = React.createClass({
     this.setState({position_select: event.target.value});
   },
 
+  onSelectYStat: function(event){
+    console.log("changed stat: " + event.target.value);
+    this.setState({ stat_select: event.target.value });
+  },
+
 
   render: function() {
 
@@ -177,7 +181,10 @@ var OutputVsSalary = React.createClass({
     return (
       <div>
 
-        <h3>Salary Vs. PPG</h3>
+        <h3 className="inline-header">Salary vs. </h3>
+        <input ref="stat_select_field" name="stat_select_field" className="stat_select_field" type="text"
+            defaultValue={this.state.stat_select} onChange={this.onSelectYStat}/>
+
 
         <div className="chart-container">
 
@@ -196,8 +203,8 @@ var OutputVsSalary = React.createClass({
             </select>
 
             <select className="select-filter" defaultValue="SG/SF" onChange={this.onSelectPosition}>
-              <option>SG/SF</option>
               <option>All Positions</option>
+              <option>SG/SF</option>
               <option>PG</option>
               <option>SG</option>
               <option>SF</option>

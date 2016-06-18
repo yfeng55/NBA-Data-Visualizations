@@ -64,10 +64,39 @@ var ChartUtil = {
             case 'WAS':
                 return {primary: "#002B5C", secondary: "#E31837"};
             default:
-                console.log("team color code not found for " + teamkey)
+                // console.log("team color code not found for " + teamkey)
                 return {primary: "#000000", secondary: "#000000"}
         }
 	},
+
+    // maps a stat keyword to a stat
+    getStat: function(statkey, playerobj){
+
+        console.log("statkey: " + statkey)
+        console.log("playerobj: " + playerobj)
+
+
+        // STATS:
+        switch(statkey){
+
+            case "PPG": 
+                return playerobj.stats[26];
+            case "3PM":
+                return playerobj.stats[10];
+            case "BLOCKS":
+                return playerobj.stats[22];
+            case "REBOUNDS":
+                return playerobj.stats[18];
+            case "ASSISTS":
+                return playerobj.stats[19];
+            case "STEALS":
+                return playerobj.stats[21];
+            default:
+                return -99999;
+        }
+
+    },
+
 
     containsPosition: function(position, selected_position){
         if(position == selected_position){
@@ -98,7 +127,10 @@ var ChartUtil = {
         output += "<p><span class='header bottom'> steals/game: </span>" + player.stats[21].toFixed(1) + "</p>";
         
         fields.forEach(function(field){
-            output += "<p><span class='header bottom'>" + field.name + "</span>" + field.value + "</p>";
+            if(field.name == "Salary"){
+                var salaryval = parseFloat(field.value.replace(/\$|,/g, ''));
+                output += "<p><span class='header bottom'>" + field.name + ": </span>$" + salaryval.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</p>";
+            }            
         }.bind(this));
 
         return output;
