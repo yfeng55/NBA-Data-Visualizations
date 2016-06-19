@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack -d --watch & sass --watch assets/styles:public & webpack-dev-server",
-    "build": "webpack && sass assets/styles/main.scss public/main.css"
+    "build": "webpack && sass assets/styles/main.scss public/main.css",
+    "start": "node app.js"
   },
   "keywords": [
     "nba",
