@@ -188,7 +188,7 @@ var ThreeAndD = React.createClass({
 
         <div className="chart-container">
 
-          <div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../assets/imgs/bball-outline.svg" /></div>
+          <div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../public/imgs/bball-outline.svg" /></div>
 
           <div className="filters-container">
             <select className="select-filter" defaultValue="All Teams" onChange={this.onSelectTeam}>
