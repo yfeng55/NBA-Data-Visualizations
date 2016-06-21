@@ -13,6 +13,8 @@ var OutputVsSalary = React.createClass({
   },
 
   componentDidMount: function(){
+    //show spinner
+    d3.select('#loading-spinner').style('display', 'block')
 
     // get player stats
     var playerstatsurl = config.api + '/agg_playerstats'
@@ -34,6 +36,7 @@ var OutputVsSalary = React.createClass({
 
   componentWillUpdate: function(nextProps, nextState){
     this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.stat_select);
+    d3.select('#loading-spinner').style('display', 'none');
   },
 
 

@@ -13,7 +13,8 @@ var ThreeAndD = React.createClass({
   },
 
   componentDidMount: function(){
-    //TODO: show spinner
+    //show spinner
+    d3.select('#loading-spinner').style('display', 'block')
 
     // get player stats
     var playerstatsurl = config.api + '/agg_playerstats'
@@ -35,7 +36,7 @@ var ThreeAndD = React.createClass({
 
   componentWillUpdate: function(nextProps, nextState){
     this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
-    // TODO: hide spinner
+    d3.select('#loading-spinner').style('display', 'none')
   },
 
 

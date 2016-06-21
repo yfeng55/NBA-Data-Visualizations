@@ -72,24 +72,28 @@ var ChartUtil = {
     // maps a stat keyword to a stat
     getStat: function(statkey, playerobj){
 
-        console.log("statkey: " + statkey)
-        console.log("playerobj: " + playerobj)
-
+        // console.log("statkey: " + statkey)
+        // console.log("playerobj: " + playerobj)
 
         // STATS:
-        switch(statkey){
+        switch(statkey.toUpperCase()){
 
-            case "PPG": 
+            case "PPG":
+            case "POINTS": 
                 return playerobj.stats[26];
             case "3PM":
                 return playerobj.stats[10];
             case "BLOCKS":
+            case "BPM":
                 return playerobj.stats[22];
             case "REBOUNDS":
+            case "RPG":
                 return playerobj.stats[18];
             case "ASSISTS":
+            case "APG":
                 return playerobj.stats[19];
             case "STEALS":
+            case "SPG":
                 return playerobj.stats[21];
             default:
                 return -99999;

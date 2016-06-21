@@ -154,10 +154,10 @@
 				),
 				_react2.default.createElement(
 					'div',
-					{ id: 'page-content-wrapper' },
+					{ className: 'content-container' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'container-fluid' },
+						{ id: 'page-content-wrapper', className: 'container-fluid' },
 						_react2.default.createElement(
 							'div',
 							{ className: 'row' },
@@ -26696,7 +26696,8 @@
 	  },
 	
 	  componentDidMount: function componentDidMount() {
-	    //TODO: show spinner
+	    //show spinner
+	    _d2.default.select('#loading-spinner').style('display', 'block');
 	
 	    // get player stats
 	    var playerstatsurl = _config2.default.api + '/agg_playerstats';
@@ -26715,7 +26716,7 @@
 	
 	  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
 	    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
-	    // TODO: hide spinner
+	    _d2.default.select('#loading-spinner').style('display', 'none');
 	  },
 	
 	  drawChart: function drawChart(unfiltered_data, teamselect, positionselect, min3pmselect) {
@@ -26971,7 +26972,7 @@
 		value: true
 	});
 	var config = {
-		"api": "http://secret-brook-54780.herokuapp.com"
+		"api": "https://secret-brook-54780.herokuapp.com"
 	};
 	
 	exports.default = config;
@@ -37068,23 +37069,28 @@
 	    // maps a stat keyword to a stat
 	    getStat: function getStat(statkey, playerobj) {
 	
-	        console.log("statkey: " + statkey);
-	        console.log("playerobj: " + playerobj);
+	        // console.log("statkey: " + statkey)
+	        // console.log("playerobj: " + playerobj)
 	
 	        // STATS:
-	        switch (statkey) {
+	        switch (statkey.toUpperCase()) {
 	
 	            case "PPG":
+	            case "POINTS":
 	                return playerobj.stats[26];
 	            case "3PM":
 	                return playerobj.stats[10];
 	            case "BLOCKS":
+	            case "BPM":
 	                return playerobj.stats[22];
 	            case "REBOUNDS":
+	            case "RPG":
 	                return playerobj.stats[18];
 	            case "ASSISTS":
+	            case "APG":
 	                return playerobj.stats[19];
 	            case "STEALS":
+	            case "SPG":
 	                return playerobj.stats[21];
 	            default:
 	                return -99999;
@@ -37178,6 +37184,8 @@
 	  },
 	
 	  componentDidMount: function componentDidMount() {
+	    //show spinner
+	    _d2.default.select('#loading-spinner').style('display', 'block');
 	
 	    // get player stats
 	    var playerstatsurl = _config2.default.api + '/agg_playerstats';
@@ -37196,6 +37204,7 @@
 	
 	  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
 	    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.stat_select);
+	    _d2.default.select('#loading-spinner').style('display', 'none');
 	  },
 	
 	  drawChart: function drawChart(unfiltered_data, teamselect, positionselect, statSelect) {
