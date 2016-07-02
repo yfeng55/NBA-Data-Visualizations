@@ -26692,31 +26692,45 @@
 	
 	  getInitialState: function getInitialState() {
 	    return { season_select: "2015-16", team_select: "All Teams", position_select: "SG/SF", min3pm_select: 0.0,
-	      team_obj: {}, data_obj: {} };
+	      team_obj: {}, data_obj: null, available_seasons: []
+	    };
 	  },
 	
 	  componentDidMount: function componentDidMount() {
 	    //show spinner
 	    _d2.default.select('#loading-spinner').style('display', 'block');
 	
-	    // get player stats
-	    var playerstatsurl = _config2.default.api + '/agg_playerstats';
+	    var playerstatsurl = _config2.default.api + '/agg_playerstats/' + this.state.season_select;
 	    _xhr2.default.get(playerstatsurl, function (err, resp) {
-	      var playerstats_obj = JSON.parse(resp.body)[0];
-	      this.setState({ data_obj: playerstats_obj });
 	
-	      // get team list
-	      var teamsurl = _config2.default.api + '/activeteams';
-	      _xhr2.default.get(teamsurl, function (err, resp) {
-	        var teams_obj = JSON.parse(resp.body)[0];
-	        this.setState({ team_obj: teams_obj });
+	      var playerstats_obj = JSON.parse(resp.body)[0];
+	
+	      this.setState({ data_obj: playerstats_obj });
+	      console.log('adfasdfasdfasd');
+	
+	      _d2.default.select('#loading-spinner').style('display', 'none');
+	
+	      // get available seasons
+	      var availableseasonsurl = _config2.default.api + '/available_seasons';
+	      _xhr2.default.get(availableseasonsurl, function (err, resp) {
+	        var availableseasonsobj = JSON.parse(resp.body)[0]['available_seasons'];
+	        this.setState({ available_seasons: availableseasonsobj });
+	
+	        // get team list
+	        var teamsurl = _config2.default.api + '/activeteams';
+	        _xhr2.default.get(teamsurl, function (err, resp) {
+	          var teams_obj = JSON.parse(resp.body)[0];
+	          this.setState({ team_obj: teams_obj });
+	        }.bind(this));
 	      }.bind(this));
 	    }.bind(this));
 	  },
 	
 	  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-	    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
-	    _d2.default.select('#loading-spinner').style('display', 'none');
+	    if (this.state.data_obj) {
+	      console.log("DRAWNEWCHART");
+	      this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
+	    }
 	  },
 	
 	  drawChart: function drawChart(unfiltered_data, teamselect, positionselect, min3pmselect) {
@@ -26803,6 +26817,18 @@
 	  onSelectPosition: function onSelectPosition(event) {
 	    this.setState({ position_select: event.target.value });
 	  },
+	  onSelectSeason: function onSelectSeason(event) {
+	    var playerstatsurl = _config2.default.api + '/agg_playerstats/' + event.target.value;
+	    _xhr2.default.get(playerstatsurl, function (err, resp) {
+	      var playerstats_obj = JSON.parse(resp.body)[0];
+	
+	      this.setState({ data_obj: playerstats_obj });
+	
+	      _d2.default.select('#loading-spinner').style('display', 'none');
+	    }.bind(this));
+	
+	    this.setState({ season_select: event.target.value });
+	  },
 	  onSelectMin3PM: function onSelectMin3PM(event) {
 	    var min3pm = event.target.value.split('>=')[1].split(' ')[1];
 	    this.setState({ min3pm_select: parseFloat(min3pm) });
@@ -26811,7 +26837,6 @@
 	  render: function render() {
 	
 	    var teamoptions = [];
-	
 	    if (this.state.team_obj.teams) {
 	      var teamkeys = Object.keys(this.state.team_obj.teams);
 	      teamkeys.forEach(function (key) {
@@ -26822,6 +26847,18 @@
 	        ));
 	      }.bind(this));
 	    }
+	
+	    var seasons = [];
+	    if (this.state.available_seasons) {
+	      this.state.available_seasons.forEach(function (season) {
+	        seasons.push(_react2.default.createElement(
+	          'option',
+	          { value: season },
+	          season
+	        ));
+	      }.bind(this));
+	    }
+	    seasons.reverse();
 	
 	    return _react2.default.createElement(
 	      'div',
@@ -26854,22 +26891,8 @@
 	          ),
 	          _react2.default.createElement(
 	            'select',
-	            { className: 'select-filter', defaultValue: '2015-16' },
-	            _react2.default.createElement(
-	              'option',
-	              null,
-	              '2015-16'
-	            ),
-	            _react2.default.createElement(
-	              'option',
-	              null,
-	              '2014-15'
-	            ),
-	            _react2.default.createElement(
-	              'option',
-	              null,
-	              '2013-14'
-	            )
+	            { className: 'select-filter', defaultValue: '2015-16', onChange: this.onSelectSeason },
+	            seasons
 	          ),
 	          _react2.default.createElement(
 	            'select',
@@ -37188,7 +37211,7 @@
 	    _d2.default.select('#loading-spinner').style('display', 'block');
 	
 	    // get player stats
-	    var playerstatsurl = _config2.default.api + '/agg_playerstats';
+	    var playerstatsurl = _config2.default.api + '/agg_playerstats/' + this.state.season_select;
 	    _xhr2.default.get(playerstatsurl, function (err, resp) {
 	      var playerstats_obj = JSON.parse(resp.body)[0];
 	      this.setState({ data_obj: playerstats_obj });

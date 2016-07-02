@@ -17,7 +17,7 @@ var OutputVsSalary = React.createClass({
     d3.select('#loading-spinner').style('display', 'block')
 
     // get player stats
-    var playerstatsurl = config.api + '/agg_playerstats'
+    var playerstatsurl = config.api + '/agg_playerstats/' + this.state.season_select;
     xhr.get(playerstatsurl, function(err, resp){
       var playerstats_obj = JSON.parse(resp.body)[0]
       this.setState({data_obj: playerstats_obj});

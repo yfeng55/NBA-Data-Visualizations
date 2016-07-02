@@ -9,34 +9,60 @@ var ThreeAndD = React.createClass({
 
   getInitialState: function (){
     return { season_select: "2015-16", team_select: "All Teams", position_select: "SG/SF", min3pm_select: 0.0,
-              team_obj: {}, data_obj: {}};
+              team_obj: {}, data_obj: null, available_seasons: []
+            };
   },
 
   componentDidMount: function(){
     //show spinner
     d3.select('#loading-spinner').style('display', 'block')
 
-    // get player stats
-    var playerstatsurl = config.api + '/agg_playerstats'
-    xhr.get(playerstatsurl, function(err, resp){
-      var playerstats_obj = JSON.parse(resp.body)[0]
-      this.setState({data_obj: playerstats_obj});
+var playerstatsurl = config.api + '/agg_playerstats/' + this.state.season_select;
+xhr.get(playerstatsurl, function(err, resp){
 
-      // get team list
-      var teamsurl = config.api + '/activeteams'
-      xhr.get(teamsurl, function(err, resp){
-        var teams_obj = JSON.parse(resp.body)[0]
-        this.setState({team_obj: teams_obj});
-      }.bind(this))
+  var playerstats_obj = JSON.parse(resp.body)[0]
+          
+  this.setState({data_obj: playerstats_obj});
+  console.log('adfasdfasdfasd')
+
+  d3.select('#loading-spinner').style('display', 'none')
+
+
+
+    // get available seasons
+    var availableseasonsurl = config.api + '/available_seasons';
+    xhr.get(availableseasonsurl, function(err, resp){
+      var availableseasonsobj = JSON.parse(resp.body)[0]['available_seasons']
+      this.setState({available_seasons: availableseasonsobj});
+
+        // get team list
+        var teamsurl = config.api + '/activeteams'
+        xhr.get(teamsurl, function(err, resp){
+          var teams_obj = JSON.parse(resp.body)[0]
+          this.setState({team_obj: teams_obj});
+
+          
+            
+        }.bind(this))
+
 
     }.bind(this))
+
+}.bind(this))
+
+    
 
 
   },
 
+
   componentWillUpdate: function(nextProps, nextState){
-    this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
-    d3.select('#loading-spinner').style('display', 'none')
+    if(this.state.data_obj){
+      console.log("DRAWNEWCHART")
+      this.drawChart(nextState.data_obj.data, nextState.team_select, nextState.position_select, nextState.min3pm_select);
+    }
+    
+    
   },
 
 
@@ -166,6 +192,19 @@ var ThreeAndD = React.createClass({
   onSelectPosition: function(event){
     this.setState({position_select: event.target.value});
   },
+  onSelectSeason: function(event){
+    var playerstatsurl = config.api + '/agg_playerstats/' + event.target.value;
+    xhr.get(playerstatsurl, function(err, resp){
+      var playerstats_obj = JSON.parse(resp.body)[0]
+    
+      this.setState({data_obj: playerstats_obj});
+
+
+      d3.select('#loading-spinner').style('display', 'none')
+    }.bind(this))
+
+    this.setState({season_select: event.target.value});
+  },
   onSelectMin3PM: function(event){
     var min3pm = event.target.value.split('>=')[1].split(' ')[1];
     this.setState({min3pm_select: parseFloat(min3pm) });
@@ -174,13 +213,20 @@ var ThreeAndD = React.createClass({
   render: function() {
 
     const teamoptions = []
-
     if(this.state.team_obj.teams){
       var teamkeys = Object.keys(this.state.team_obj.teams)
       teamkeys.forEach(function(key){
         teamoptions.push(<option value={key}>{key}</option>)
       }.bind(this))
     }
+
+    const seasons = []
+    if(this.state.available_seasons){
+      this.state.available_seasons.forEach(function(season){
+        seasons.push(<option value={season}>{season}</option>)
+      }.bind(this))
+    }
+    seasons.reverse()
 
     return (
       <div>
@@ -197,10 +243,8 @@ var ThreeAndD = React.createClass({
               {teamoptions}
             </select>
             
-            <select className="select-filter" defaultValue="2015-16">
-              <option>2015-16</option>
-              <option>2014-15</option>
-              <option>2013-14</option>
+            <select className="select-filter" defaultValue="2015-16" onChange={this.onSelectSeason}>
+              {seasons}
             </select>
 
             <select className="select-filter" defaultValue="SG/SF" onChange={this.onSelectPosition}>
