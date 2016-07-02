@@ -26702,13 +26702,9 @@
 	
 	    var playerstatsurl = _config2.default.api + '/agg_playerstats/' + this.state.season_select;
 	    _xhr2.default.get(playerstatsurl, function (err, resp) {
-	
-	      var playerstats_obj = JSON.parse(resp.body)[0];
-	
-	      this.setState({ data_obj: playerstats_obj });
-	      console.log('adfasdfasdfasd');
-	
 	      _d2.default.select('#loading-spinner').style('display', 'none');
+	      var playerstats_obj = JSON.parse(resp.body)[0];
+	      this.setState({ data_obj: playerstats_obj });
 	
 	      // get available seasons
 	      var availableseasonsurl = _config2.default.api + '/available_seasons';
@@ -37137,7 +37133,7 @@
 	
 	        var output = "";
 	
-	        output += "<span>" + "<img class='profile_img' src='../../public/imgs/profilepics/small/" + player['player_id'] + ".png' />" + "</span>";
+	        output += "<span>" + "<img class='profile_img' src='../../public/imgs/profilepics/small/" + player['player_id'] + ".png' onerror='this.src=\"../../public/imgs/profilepics/small/default-small.svg\";' />" + "</span>";
 	        output += "<p><span class='header name'>" + player['player_name'] + "</span></p>";
 	        output += "<p><span class='header top'> position: </span>" + player['position'] + "</p>";
 	        output += "<p><span class='header top'> min/game: </span>" + player.stats[6].toFixed(1) + "</p>";

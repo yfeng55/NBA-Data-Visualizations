@@ -119,7 +119,7 @@ var ChartUtil = {
 
         var output = "";
 
-        output += "<span>" + "<img class='profile_img' src='../../public/imgs/profilepics/small/" + player['player_id'] + ".png' />" + "</span>";
+        output += "<span>" + "<img class='profile_img' src='../../public/imgs/profilepics/small/" + player['player_id'] + ".png' onerror='this.src=\"../../public/imgs/profilepics/small/default-small.svg\";' />" + "</span>";
         output += "<p><span class='header name'>" + player['player_name'] + "</span></p>";
         output += "<p><span class='header top'> position: </span>" + player['position'] + "</p>";
         output += "<p><span class='header top'> min/game: </span>" + player.stats[6].toFixed(1) + "</p>";
