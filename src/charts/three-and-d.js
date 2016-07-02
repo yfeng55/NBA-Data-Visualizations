@@ -17,12 +17,13 @@ var ThreeAndD = React.createClass({
     //show spinner
     d3.select('#loading-spinner').style('display', 'block')
 
+    //get player stats
     var playerstatsurl = config.api + '/agg_playerstats/' + this.state.season_select;
     xhr.get(playerstatsurl, function(err, resp){
       d3.select('#loading-spinner').style('display', 'none')
       var playerstats_obj = JSON.parse(resp.body)[0]
       this.setState({data_obj: playerstats_obj});
-      
+
         // get available seasons
         var availableseasonsurl = config.api + '/available_seasons';
         xhr.get(availableseasonsurl, function(err, resp){
@@ -42,8 +43,6 @@ var ThreeAndD = React.createClass({
     }.bind(this))
 
     
-
-
   },
 
 

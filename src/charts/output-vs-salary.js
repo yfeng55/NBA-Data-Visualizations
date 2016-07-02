@@ -9,7 +9,7 @@ var OutputVsSalary = React.createClass({
 
   getInitialState: function (){
     return { season_select: "2015-16", team_select: "All Teams", position_select: "All Positions", stat_select: "PPG",
-              team_obj: {}, data_obj: {}};
+              team_obj: {}, data_obj: {}, available_seasons: []};
   },
 
   componentDidMount: function(){
@@ -22,11 +22,19 @@ var OutputVsSalary = React.createClass({
       var playerstats_obj = JSON.parse(resp.body)[0]
       this.setState({data_obj: playerstats_obj});
 
-      // get team list
-      var teamsurl = config.api + '/activeteams'
-      xhr.get(teamsurl, function(err, resp){
-        var teams_obj = JSON.parse(resp.body)[0]
-        this.setState({team_obj: teams_obj});
+      // get available seasons
+        var availableseasonsurl = config.api + '/available_seasons';
+        xhr.get(availableseasonsurl, function(err, resp){
+          var availableseasonsobj = JSON.parse(resp.body)[0]['available_seasons']
+          this.setState({available_seasons: availableseasonsobj});
+
+          // get team list
+          var teamsurl = config.api + '/activeteams'
+          xhr.get(teamsurl, function(err, resp){
+            var teams_obj = JSON.parse(resp.body)[0]
+            this.setState({team_obj: teams_obj});
+        }.bind(this))
+
       }.bind(this))
 
     }.bind(this))
@@ -163,7 +171,19 @@ var OutputVsSalary = React.createClass({
   onSelectPosition: function(event){
     this.setState({position_select: event.target.value});
   },
+  onSelectSeason: function(event){
+    var playerstatsurl = config.api + '/agg_playerstats/' + event.target.value;
+    xhr.get(playerstatsurl, function(err, resp){
+      var playerstats_obj = JSON.parse(resp.body)[0]
+    
+      this.setState({data_obj: playerstats_obj});
 
+
+      d3.select('#loading-spinner').style('display', 'none')
+    }.bind(this))
+
+    this.setState({season_select: event.target.value});
+  },
   onSelectYStat: function(event){
     console.log("changed stat: " + event.target.value);
     this.setState({ stat_select: event.target.value });
@@ -173,13 +193,20 @@ var OutputVsSalary = React.createClass({
   render: function() {
 
     const teamoptions = []
-
     if(this.state.team_obj.teams){
       var teamkeys = Object.keys(this.state.team_obj.teams)
       teamkeys.forEach(function(key){
         teamoptions.push(<option value={key}>{key}</option>)
       }.bind(this))
     }
+
+    const seasons = []
+    if(this.state.available_seasons){
+      this.state.available_seasons.forEach(function(season){
+        seasons.push(<option value={season}>{season}</option>)
+      }.bind(this))
+    }
+    seasons.reverse()
 
     return (
       <div>
@@ -199,10 +226,8 @@ var OutputVsSalary = React.createClass({
               {teamoptions}
             </select>
             
-            <select className="select-filter" defaultValue="2015-16">
-              <option>2015-16</option>
-              <option>2014-15</option>
-              <option>2013-14</option>
+            <select className="select-filter" defaultValue="2015-16" onChange={this.onSelectSeason}>
+              {seasons}
             </select>
 
             <select className="select-filter" defaultValue="SG/SF" onChange={this.onSelectPosition}>
