@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
 import ThreeAndD from './charts/three-and-d'
 import OutputVsSalary from './charts/output-vs-salary'
+import PlayerIndividualStats from './charts/player-individual-stats'
 
 
 var App = React.createClass({
@@ -15,9 +16,9 @@ var App = React.createClass({
 		                	<img src="/public/imgs/bball-filled.svg" width="27px" height="27px" />3&D</Link>
 		                </li>
 		                
+		                <li><Link to="/individual-player-stats">Individual Player Stats</Link></li>
 		                <li><Link to="/three-and-d">3PT% vs. Defensive Rating</Link></li>
 		                <li><Link to="/output-vs-salary">Player Salary vs. Output</Link></li>
-		                <li><Link to="chart-3">Player Stats Career Progression</Link></li>
 		                <li><Link to="chart-4">Player Shot Volume Breakdown</Link></li>
 		                <li><Link to="chart-5">Player/Prospect Clustering</Link></li>
 		            </ul>
@@ -49,7 +50,7 @@ render((
 			<IndexRoute component={ThreeAndD} />
 			<Route path="three-and-d" component={ThreeAndD} />
 			<Route path="output-vs-salary" component={OutputVsSalary} />
-			<Route path="chart-3" component={ThreeAndD} />
+			<Route path="individual-player-stats" component={PlayerIndividualStats} />
 			<Route path="chart-4" component={ThreeAndD} />
 			<Route path="chart-5" component={ThreeAndD} />
 		</Route>

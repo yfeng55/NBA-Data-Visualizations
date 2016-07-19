@@ -65,6 +65,10 @@
 	
 	var _outputVsSalary2 = _interopRequireDefault(_outputVsSalary);
 	
+	var _playerIndividualStats = __webpack_require__(/*! ./charts/player-individual-stats */ 242);
+	
+	var _playerIndividualStats2 = _interopRequireDefault(_playerIndividualStats);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var App = _react2.default.createClass({
@@ -95,6 +99,15 @@
 							null,
 							_react2.default.createElement(
 								_reactRouter.Link,
+								{ to: '/individual-player-stats' },
+								'Individual Player Stats'
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								_reactRouter.Link,
 								{ to: '/three-and-d' },
 								'3PT% vs. Defensive Rating'
 							)
@@ -106,15 +119,6 @@
 								_reactRouter.Link,
 								{ to: '/output-vs-salary' },
 								'Player Salary vs. Output'
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: 'chart-3' },
-								'Player Stats Career Progression'
 							)
 						),
 						_react2.default.createElement(
@@ -182,7 +186,7 @@
 			_react2.default.createElement(_reactRouter.IndexRoute, { component: _threeAndD2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'three-and-d', component: _threeAndD2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'output-vs-salary', component: _outputVsSalary2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'chart-3', component: _threeAndD2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'individual-player-stats', component: _playerIndividualStats2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'chart-4', component: _threeAndD2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'chart-5', component: _threeAndD2.default })
 		)
@@ -37444,6 +37448,138 @@
 	});
 	
 	exports.default = OutputVsSalary;
+
+/***/ },
+/* 242 */
+/*!***********************************************!*\
+  !*** ./src/charts/player-individual-stats.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _config = __webpack_require__(/*! ../config */ 230);
+	
+	var _config2 = _interopRequireDefault(_config);
+	
+	var _xhr = __webpack_require__(/*! xhr */ 231);
+	
+	var _xhr2 = _interopRequireDefault(_xhr);
+	
+	var _d = __webpack_require__(/*! d3 */ 239);
+	
+	var _d2 = _interopRequireDefault(_d);
+	
+	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 240);
+	
+	var _chartUtil2 = _interopRequireDefault(_chartUtil);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var PlayerIndividualStats = _react2.default.createClass({
+		displayName: 'PlayerIndividualStats',
+	
+	
+		getInitialState: function getInitialState() {
+			return { season_select: "2015-16", player_select: "201939", data_obj: {}, available_seasons: [], selected_tab: "shot_volume" };
+		},
+	
+		componentDidMount: function componentDidMount() {
+	
+			// get gamelogs data for selected player
+			var gamelogsurl = _config2.default.api + '/gamelogs/' + this.state.player_select;
+			_xhr2.default.get(gamelogsurl, function (err, resp) {
+				var playerstats_obj = JSON.parse(resp.body)[0];
+				this.setState({ data_obj: playerstats_obj });
+	
+				// get available seasons
+				var availableseasonsurl = _config2.default.api + '/available_seasons';
+				_xhr2.default.get(availableseasonsurl, function (err, resp) {
+					var availableseasonsobj = JSON.parse(resp.body)[0]['available_seasons'];
+					this.setState({ available_seasons: availableseasonsobj });
+				}.bind(this));
+			}.bind(this));
+		},
+	
+		componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
+			console.log("===== GAMELOGS DATA =====");
+			console.log(nextState.data_obj);
+			_d2.default.select('#loading-spinner').style('display', 'none');
+		},
+	
+		///// event handlers /////
+		onSelectPlayer: function onSelectPlayer(event) {
+			var gamelogs = _config2.default.api + '/gamelogs/' + event.target.value;
+			_xhr2.default.get(gamelogs, function (err, resp) {
+				var playerstats_obj = JSON.parse(resp.body)[0];
+				this.setState({ data_obj: playerstats_obj });
+				_d2.default.select('#loading-spinner').style('display', 'none');
+			}.bind(this));
+	
+			this.setState({ player_select: event.target.value });
+		},
+	
+		onSelectSeason: function onSelectSeason(event) {
+			this.setState({ season_select: event.target.value });
+		},
+	
+		render: function render() {
+	
+			var seasons = [];
+			if (this.state.available_seasons) {
+				this.state.available_seasons.forEach(function (season) {
+					seasons.push(_react2.default.createElement(
+						'option',
+						{ value: season },
+						season
+					));
+				}.bind(this));
+			}
+			seasons.reverse();
+	
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'h3',
+					{ className: 'inline-header' },
+					'Individual Stats View '
+				),
+				_react2.default.createElement('input', { ref: 'player_select_field', name: 'player_select_field', className: 'stat_select_field', type: 'text',
+					defaultValue: this.state.player_select, onChange: this.onSelectPlayer }),
+				_react2.default.createElement(
+					'div',
+					{ className: 'chart-container' },
+					_react2.default.createElement(
+						'div',
+						{ id: 'loading-spinner', className: 'loading-spinner', ref: 'loading-spinner' },
+						_react2.default.createElement('img', { className: 'spinning-ball', src: '../../public/imgs/bball-outline.svg' })
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'filters-container' },
+						_react2.default.createElement(
+							'select',
+							{ className: 'select-filter', defaultValue: '2015-16', onChange: this.onSelectSeason },
+							seasons
+						)
+					),
+					_react2.default.createElement('div', { id: 'chart2-individualstats', className: 'chart' })
+				)
+			);
+		}
+	
+	});
+	
+	exports.default = PlayerIndividualStats;
 
 /***/ }
 /******/ ]);
