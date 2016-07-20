@@ -8,7 +8,7 @@ import chartUtil from '../util/chart-util';
 var PlayerIndividualStats = React.createClass({
 
 	getInitialState: function (){
-		return { season_select: "2015-16", player_select: "201939", data_obj: {}, available_seasons: [], selected_tab: "shot_volume"};
+		return { season_select: "2015-16", player_select: "201939", data_obj: {}, available_seasons: [], selected_tab: "volume"};
 	},
 
 
@@ -33,8 +33,6 @@ var PlayerIndividualStats = React.createClass({
 
 
 	componentWillUpdate: function(nextProps, nextState){
-		console.log("===== GAMELOGS DATA =====");
-		console.log(nextState.data_obj);
 		d3.select('#loading-spinner').style('display', 'none');
 	},
 
@@ -56,6 +54,26 @@ var PlayerIndividualStats = React.createClass({
 		this.setState({ season_select: event.target.value });
 	},
 
+	onSwitchTabs: function(){
+		if(this.state.selected_tab == "volume"){
+			this.setState({selected_tab: "percentage"})
+		}else{
+			this.setState({selected_tab: "volume"})
+		}
+	},
+
+
+	drawPercentageChart: function(data, season){
+		d3.selectAll('svg').remove();
+		console.log(data)
+	},
+
+	drawVolumeChart: function(data, season){
+		d3.selectAll('svg').remove();
+		console.log(data)
+	},
+
+
 
 	render: function() {
 
@@ -66,6 +84,14 @@ var PlayerIndividualStats = React.createClass({
 			}.bind(this))
 		}
 		seasons.reverse()
+
+		//set selected state of chart tabs
+		var percentTabClass = "charttab"; var volumeTabClass = "charttab";
+		percentTabClass += (this.state.selected_tab == "percentage") ? " selected" : "";
+		volumeTabClass += (this.state.selected_tab == "volume") ? " selected" : "";
+
+		console.log("PERCENT TAB CLASS: " + percentTabClass);
+		console.log("VOLUME TAB CLASS: " + volumeTabClass);		
 
 		return (
 			<div>
@@ -83,6 +109,9 @@ var PlayerIndividualStats = React.createClass({
 						</select>
 					</div>
 
+
+					<button id="percentage-tab" className={percentTabClass} onClick={this.onSwitchTabs}>Efficiency</button>
+					<button id="volume-tab" className={volumeTabClass} onClick={this.onSwitchTabs}>Shot Volume</button>
 					<div id="chart2-individualstats" className="chart"></div>
 
 				</div>

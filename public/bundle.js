@@ -37489,7 +37489,7 @@
 	
 	
 		getInitialState: function getInitialState() {
-			return { season_select: "2015-16", player_select: "201939", data_obj: {}, available_seasons: [], selected_tab: "shot_volume" };
+			return { season_select: "2015-16", player_select: "201939", data_obj: {}, available_seasons: [], selected_tab: "volume" };
 		},
 	
 		componentDidMount: function componentDidMount() {
@@ -37510,8 +37510,6 @@
 		},
 	
 		componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-			console.log("===== GAMELOGS DATA =====");
-			console.log(nextState.data_obj);
 			_d2.default.select('#loading-spinner').style('display', 'none');
 		},
 	
@@ -37531,6 +37529,24 @@
 			this.setState({ season_select: event.target.value });
 		},
 	
+		onSwitchTabs: function onSwitchTabs() {
+			if (this.state.selected_tab == "volume") {
+				this.setState({ selected_tab: "percentage" });
+			} else {
+				this.setState({ selected_tab: "volume" });
+			}
+		},
+	
+		drawPercentageChart: function drawPercentageChart(data, season) {
+			_d2.default.selectAll('svg').remove();
+			console.log(data);
+		},
+	
+		drawVolumeChart: function drawVolumeChart(data, season) {
+			_d2.default.selectAll('svg').remove();
+			console.log(data);
+		},
+	
 		render: function render() {
 	
 			var seasons = [];
@@ -37544,6 +37560,14 @@
 				}.bind(this));
 			}
 			seasons.reverse();
+	
+			//set selected state of chart tabs
+			var percentTabClass = "charttab";var volumeTabClass = "charttab";
+			percentTabClass += this.state.selected_tab == "percentage" ? " selected" : "";
+			volumeTabClass += this.state.selected_tab == "volume" ? " selected" : "";
+	
+			console.log("PERCENT TAB CLASS: " + percentTabClass);
+			console.log("VOLUME TAB CLASS: " + volumeTabClass);
 	
 			return _react2.default.createElement(
 				'div',
@@ -37571,6 +37595,16 @@
 							{ className: 'select-filter', defaultValue: '2015-16', onChange: this.onSelectSeason },
 							seasons
 						)
+					),
+					_react2.default.createElement(
+						'button',
+						{ id: 'percentage-tab', className: percentTabClass, onClick: this.onSwitchTabs },
+						'Efficiency'
+					),
+					_react2.default.createElement(
+						'button',
+						{ id: 'volume-tab', className: volumeTabClass, onClick: this.onSwitchTabs },
+						'Shot Volume'
 					),
 					_react2.default.createElement('div', { id: 'chart2-individualstats', className: 'chart' })
 				)

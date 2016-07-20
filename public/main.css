@@ -6817,6 +6817,20 @@ button.close {
 .inline-header {
   display: inline; }
 
+/* Chart3 - Individual Player Stats */
+.charttab {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #EEEEEE;
+  color: #999999;
+  margin-bottom: -20px;
+  margin-top: 20px; }
+
+.charttab.selected {
+  font-weight: bold;
+  background-color: #CDCDCD;
+  color: black; }
+
 body {
   font-family: 'Lato', sans-serif; }
 
