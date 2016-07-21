@@ -6825,11 +6825,17 @@ button.close {
   color: #999999;
   margin-bottom: -20px;
   margin-top: 20px; }
+  .charttab:focus {
+    outline: none; }
 
 .charttab.selected {
   font-weight: bold;
   background-color: #CDCDCD;
   color: black; }
+
+.line {
+  fill: none;
+  stroke-width: 2px; }
 
 body {
   font-family: 'Lato', sans-serif; }

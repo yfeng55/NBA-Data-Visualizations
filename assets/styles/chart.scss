@@ -126,6 +126,9 @@
 	color: $dark-gray;
 	margin-bottom: -20px;
 	margin-top: 20px;
+	&:focus{
+		outline: none;
+	}
 }
 .charttab.selected{
 	font-weight: bold;
@@ -133,7 +136,10 @@
 	color: black;
 }
 
-
+.line{
+	fill:none;
+	stroke-width: 2px;
+}
 
 
 
