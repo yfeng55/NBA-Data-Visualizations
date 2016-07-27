@@ -126,6 +126,8 @@
 	color: $dark-gray;
 	margin-bottom: -20px;
 	margin-top: 20px;
+    border-top-right-radius: .5em;
+    border-top-left-radius: .5em;
 	&:focus{
 		outline: none;
 	}

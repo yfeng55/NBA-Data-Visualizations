@@ -69,7 +69,7 @@ var ChartUtil = {
         }
 	},
 
-    // maps a stat keyword to a stat
+    // maps a stat keyword to a stat in a playerobject 
     getStat: function(statkey, playerobj){
 
         // console.log("statkey: " + statkey)
@@ -99,6 +99,18 @@ var ChartUtil = {
                 return -99999;
         }
 
+    },
+
+    // maps an index to a stat key in a gamelog object
+    getStatKeyFromIndexInGamelog: function(index, gamelogobj){
+        switch(index){
+            case 27:
+                return "Points";
+            case 2:
+                return "GameDate"
+            default:
+                return "ERROR";
+        }    
     },
 
 

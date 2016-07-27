@@ -37093,7 +37093,7 @@
 	        }
 	    },
 	
-	    // maps a stat keyword to a stat
+	    // maps a stat keyword to a stat in a playerobject
 	    getStat: function getStat(statkey, playerobj) {
 	
 	        // console.log("statkey: " + statkey)
@@ -37121,6 +37121,18 @@
 	                return playerobj.stats[21];
 	            default:
 	                return -99999;
+	        }
+	    },
+	
+	    // maps an index to a stat key in a gamelog object
+	    getStatKeyFromIndexInGamelog: function getStatKeyFromIndexInGamelog(index, gamelogobj) {
+	        switch (index) {
+	            case 27:
+	                return "Points";
+	            case 2:
+	                return "GameDate";
+	            default:
+	                return "ERROR";
 	        }
 	    },
 	
@@ -37492,7 +37504,7 @@
 	
 	
 		getInitialState: function getInitialState() {
-			return { season_select: "2015-16", player_select: "201939", data_obj: {}, selected_tab: "percentage" };
+			return { season_select: "all seasons", player_select: "201939", data_obj: {}, selected_tab: "percentage" };
 		},
 	
 		componentDidMount: function componentDidMount() {
@@ -37543,11 +37555,24 @@
 			_d2.default.selectAll('svg').remove();
 	
 			var data = [];
-			dataobj[season].forEach(function (datum) {
-				if (datum.length >= 27) {
-					data.push(datum);
-				}
-			}.bind(this));
+	
+			if (season == "all seasons") {
+				dataobj['seasons_played'].forEach(function (season) {
+					var season_formatted = season - 1 + "-" + season.toString().slice(-2);
+	
+					dataobj[season_formatted].forEach(function (datum) {
+						if (datum.length >= 27) {
+							data.push(datum);
+						}
+					}.bind(this));
+				}.bind(this));
+			} else {
+				dataobj[season].forEach(function (datum) {
+					if (datum.length >= 27) {
+						data.push(datum);
+					}
+				}.bind(this));
+			}
 	
 			var maxYVal = 0;var gamesplayed = [];
 			data.forEach(function (datum) {
@@ -37559,9 +37584,9 @@
 	
 			// chart dimensions
 			var p = 40,
-			    w = 930,
-			    h = 380;
-			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 2 * p).attr("height", h + 4 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + p + ")");
+			    w = 900,
+			    h = 370;
+			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 3 * p).attr("height", h + 4 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + p + ")");
 	
 			// define scales
 			var x = _d2.default.scale.ordinal().domain(gamesplayed).rangePoints([0, w]);
@@ -37571,10 +37596,14 @@
 			var xAxis = _d2.default.svg.axis().scale(x).orient("bottom");
 			var yAxis = _d2.default.svg.axis().scale(y).orient("left");
 	
+			var tickwidth = Math.round(data.length / w * 32.9268);
+			console.log("===== tick width =====");
+			console.log(tickwidth);
+	
 			svg.append('g').attr('class', 'axis').call(xAxis).attr("transform", "translate(" + 0 + "," + h + ")").selectAll("text").style("text-anchor", "end").attr("dx", "-.5em").attr("dy", "0em").attr("transform", function (d) {
 				return "rotate(-45)";
 			}).each(function (d, i) {
-				if (i % 2 == 0 && gamesplayed.length > 60) {
+				if (Math.ceil(i % tickwidth) != 0 && gamesplayed.length > 60) {
 					this.remove();
 				}
 			});
@@ -37602,6 +37631,9 @@
 			});
 	
 			svg.append("path").datum(data).attr("class", "line").attr("d", line).style({ "stroke": "#0099ff" });
+	
+			// append line label
+			svg.append("text").attr("x", x(data[data.length - 1][2])).attr("y", y(data[data.length - 1][27])).attr("dx", "5px").text(_chartUtil2.default.getStatKeyFromIndexInGamelog(27));
 		},
 	
 		drawVolumeChart: function drawVolumeChart(dataobj, season) {
@@ -37611,6 +37643,11 @@
 		render: function render() {
 	
 			var seasons = [];
+			seasons.push(_react2.default.createElement(
+				'option',
+				{ value: 'all seasons' },
+				'all seasons'
+			));
 			if (this.state.data_obj.seasons_played) {
 				this.state.data_obj.seasons_played.forEach(function (season) {
 					var season_formatted = season - 1 + "-" + season.toString().slice(-2);
@@ -37654,7 +37691,7 @@
 						{ className: 'filters-container' },
 						_react2.default.createElement(
 							'select',
-							{ className: 'select-filter', defaultValue: '2015-16', onChange: this.onSelectSeason },
+							{ className: 'select-filter', defaultValue: 'all seasons', onChange: this.onSelectSeason },
 							seasons
 						)
 					),

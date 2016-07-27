@@ -6824,7 +6824,9 @@ button.close {
   border: 1px solid #EEEEEE;
   color: #999999;
   margin-bottom: -20px;
-  margin-top: 20px; }
+  margin-top: 20px;
+  border-top-right-radius: .5em;
+  border-top-left-radius: .5em; }
   .charttab:focus {
     outline: none; }
 

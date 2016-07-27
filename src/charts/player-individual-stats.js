@@ -8,7 +8,7 @@ import chartUtil from '../util/chart-util';
 var PlayerIndividualStats = React.createClass({
 
 	getInitialState: function (){
-		return { season_select: "2015-16", player_select: "201939", data_obj: {}, selected_tab: "percentage"};
+		return { season_select: "all seasons", player_select: "201939", data_obj: {}, selected_tab: "percentage"};
 	},
 
 
@@ -65,9 +65,21 @@ var PlayerIndividualStats = React.createClass({
 		d3.selectAll('svg').remove();
 
 		var data = [];
-		dataobj[season].forEach(function(datum){
-			if(datum.length >= 27){ data.push(datum) }
-		}.bind(this))
+
+		if(season == "all seasons"){
+			dataobj['seasons_played'].forEach(function(season){
+				var season_formatted = season-1 + "-" + season.toString().slice(-2)
+
+				dataobj[season_formatted].forEach(function(datum){
+					if(datum.length >= 27){ data.push(datum) }
+				}.bind(this))
+
+			}.bind(this));
+		}else{
+			dataobj[season].forEach(function(datum){
+				if(datum.length >= 27){ data.push(datum) }
+			}.bind(this))	
+		}
 
 		var maxYVal = 0; var gamesplayed = [];
 		data.forEach(function(datum){
@@ -76,9 +88,9 @@ var PlayerIndividualStats = React.createClass({
 		}.bind(this))
 
 		// chart dimensions
-    	var p = 40, w = 930, h = 380;
+    	var p = 40, w = 900, h = 370;
     	var svg = d3.select("#chart2-individualstats").append("svg")
-    		.attr("width", w + 2*p)
+    		.attr("width", w + 3*p)
 			.attr("height", h + 4*p)
 			.append("g")
 			.attr("transform", "translate(" + 1.25*p + "," + p + ")");
@@ -93,6 +105,10 @@ var PlayerIndividualStats = React.createClass({
 	    var xAxis = d3.svg.axis().scale(x).orient("bottom");
 	    var yAxis = d3.svg.axis().scale(y).orient("left");
 
+	    var tickwidth = Math.round((data.length / w) * 32.9268)
+	    console.log("===== tick width =====")
+	    console.log(tickwidth)
+
 	    svg.append('g')
 	    	.attr('class', 'axis')
 	    	.call(xAxis)
@@ -102,7 +118,7 @@ var PlayerIndividualStats = React.createClass({
 	    		.attr("dx", "-.5em")
 	    		.attr("dy", "0em")
 	    		.attr("transform", function(d){ return "rotate(-45)" })
-	    		.each(function(d, i){ if(i%2 == 0 && gamesplayed.length > 60){ this.remove(); } });
+	    		.each(function(d, i){ if( Math.ceil(i % tickwidth) != 0 && gamesplayed.length > 60){ this.remove(); } });
 
 
 		svg.append("g")
@@ -126,12 +142,18 @@ var PlayerIndividualStats = React.createClass({
 	    	.x(function(d){ return x(d[2]) })
 	    	.y(function(d){ return y(d[27]) });
 
-
     	svg.append("path")
 	    	.datum(data)
 	    	.attr("class", "line")
 	    	.attr("d", line)
 	    	.style({"stroke": "#0099ff"})
+
+    	// append line label
+    	svg.append("text")
+    		.attr("x", x(data[data.length-1][2]))
+    		.attr("y", y(data[data.length-1][27]))
+    		.attr("dx", "5px")
+    		.text(chartUtil.getStatKeyFromIndexInGamelog(27));
 
 
 	},
@@ -145,6 +167,7 @@ var PlayerIndividualStats = React.createClass({
 	render: function() {
 
 		const seasons = []
+		seasons.push(<option value="all seasons">all seasons</option>)
 		if(this.state.data_obj.seasons_played){
 			this.state.data_obj.seasons_played.forEach(function(season){
 				var season_formatted = season-1 + "-" + season.toString().slice(-2)
@@ -173,7 +196,7 @@ var PlayerIndividualStats = React.createClass({
 					<div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../public/imgs/bball-outline.svg" /></div>
 
 					<div className="filters-container">
-						<select className="select-filter" defaultValue="2015-16" onChange={this.onSelectSeason}>
+						<select className="select-filter" defaultValue="all seasons" onChange={this.onSelectSeason}>
 							{seasons}
 						</select>
 					</div>
