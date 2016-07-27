@@ -8,9 +8,10 @@ import chartUtil from '../util/chart-util';
 var PlayerIndividualStats = React.createClass({
 
 	getInitialState: function (){
-		return { season_select: "all seasons", player_select: "201939", data_obj: {}, selected_tab: "percentage"};
+		return { season_select: "career", player_select: "201939", data_obj: {}, selected_tab: "percentage",
+			selected_stats: [27, 22, 21, 23, 24, 14]
+		};
 	},
-
 
 	componentDidMount: function(){
 
@@ -28,7 +29,7 @@ var PlayerIndividualStats = React.createClass({
 		d3.select('#loading-spinner').style('display', 'none');
 	
 		if(nextState.selected_tab == "percentage"){
-			this.drawPercentageChart(nextState.data_obj, nextState.season_select);
+			this.drawPercentageChart(nextState.data_obj, nextState.season_select, nextState.selected_stats);
 		}else{
 			this.drawVolumeChart(nextState.data_obj, nextState.season_select);
 		}
@@ -61,12 +62,12 @@ var PlayerIndividualStats = React.createClass({
 	},
 
 
-	drawPercentageChart: function(dataobj, season){
+	drawPercentageChart: function(dataobj, season, selected_stats){
 		d3.selectAll('svg').remove();
 
 		var data = [];
 
-		if(season == "all seasons"){
+		if(season == "career"){
 			dataobj['seasons_played'].forEach(function(season){
 				var season_formatted = season-1 + "-" + season.toString().slice(-2)
 
@@ -99,6 +100,10 @@ var PlayerIndividualStats = React.createClass({
 		// define scales
 	    var x = d3.scale.ordinal().domain(gamesplayed).rangePoints([0, w]);
 	    var y = d3.scale.linear().domain([0, maxYVal]).range([h, 0]);
+	    var c = function(x) {
+			var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+			return colors[x % colors.length];
+		}
 	    
 
 	    // define x/y axis
@@ -128,33 +133,25 @@ var PlayerIndividualStats = React.createClass({
 
 		svg.selectAll(".tick").each(function(d, i){ if (d==0){ this.remove(); }});
 
-
-
-	    console.log("===== DATA =====")
-	    console.log(data)
-	    console.log("===== maxYVal =====")
-	    console.log(maxYVal)
-	    console.log("===== DOMAIN =====")
-	    console.log(gamesplayed)
-
 	    // draw lines
-	    var line = d3.svg.line()
-	    	.x(function(d){ return x(d[2]) })
-	    	.y(function(d){ return y(d[27]) });
+	    selected_stats.forEach(function(statindex, i){
+	    	var line = d3.svg.line()
+		    	.x(function(d){ return x(d[2]) })
+		    	.y(function(d){ return y(d[statindex]) });
 
-    	svg.append("path")
-	    	.datum(data)
-	    	.attr("class", "line")
-	    	.attr("d", line)
-	    	.style({"stroke": "#0099ff"})
+	    	svg.append("path")
+		    	.datum(data)
+		    	.attr("class", "line")
+		    	.attr("d", line)
+		    	.style({"stroke": c(i) })
 
-    	// append line label
-    	svg.append("text")
-    		.attr("x", x(data[data.length-1][2]))
-    		.attr("y", y(data[data.length-1][27]))
-    		.attr("dx", "5px")
-    		.text(chartUtil.getStatKeyFromIndexInGamelog(27));
-
+	    	// append line label
+	    	svg.append("text")
+	    		.attr("x", x(data[data.length-1][2]))
+	    		.attr("y", y(data[data.length-1][statindex]))
+	    		.attr("dx", "5px")
+	    		.text(chartUtil.getStatKeyFromIndexInGamelog(statindex));
+	    }.bind(this));
 
 	},
 
@@ -167,7 +164,7 @@ var PlayerIndividualStats = React.createClass({
 	render: function() {
 
 		const seasons = []
-		seasons.push(<option value="all seasons">all seasons</option>)
+		seasons.push(<option value="career">career</option>)
 		if(this.state.data_obj.seasons_played){
 			this.state.data_obj.seasons_played.forEach(function(season){
 				var season_formatted = season-1 + "-" + season.toString().slice(-2)
@@ -196,7 +193,7 @@ var PlayerIndividualStats = React.createClass({
 					<div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../public/imgs/bball-outline.svg" /></div>
 
 					<div className="filters-container">
-						<select className="select-filter" defaultValue="all seasons" onChange={this.onSelectSeason}>
+						<select className="select-filter" defaultValue="career" onChange={this.onSelectSeason}>
 							{seasons}
 						</select>
 					</div>

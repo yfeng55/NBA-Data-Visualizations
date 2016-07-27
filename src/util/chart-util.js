@@ -106,6 +106,16 @@ var ChartUtil = {
         switch(index){
             case 27:
                 return "Points";
+            case 22:
+                return "Assists";
+            case 21:
+                return "Rebounds";
+            case 23:
+                return "Steals";
+            case 24:
+                return "Blocks";
+            case 14:
+                return "3PM";
             case 2:
                 return "GameDate"
             default:

@@ -37129,6 +37129,16 @@
 	        switch (index) {
 	            case 27:
 	                return "Points";
+	            case 22:
+	                return "Assists";
+	            case 21:
+	                return "Rebounds";
+	            case 23:
+	                return "Steals";
+	            case 24:
+	                return "Blocks";
+	            case 14:
+	                return "3PM";
 	            case 2:
 	                return "GameDate";
 	            default:
@@ -37504,7 +37514,9 @@
 	
 	
 		getInitialState: function getInitialState() {
-			return { season_select: "all seasons", player_select: "201939", data_obj: {}, selected_tab: "percentage" };
+			return { season_select: "career", player_select: "201939", data_obj: {}, selected_tab: "percentage",
+				selected_stats: [27, 22, 21, 23, 24, 14]
+			};
 		},
 	
 		componentDidMount: function componentDidMount() {
@@ -37521,7 +37533,7 @@
 			_d2.default.select('#loading-spinner').style('display', 'none');
 	
 			if (nextState.selected_tab == "percentage") {
-				this.drawPercentageChart(nextState.data_obj, nextState.season_select);
+				this.drawPercentageChart(nextState.data_obj, nextState.season_select, nextState.selected_stats);
 			} else {
 				this.drawVolumeChart(nextState.data_obj, nextState.season_select);
 			}
@@ -37551,12 +37563,12 @@
 			}
 		},
 	
-		drawPercentageChart: function drawPercentageChart(dataobj, season) {
+		drawPercentageChart: function drawPercentageChart(dataobj, season, selected_stats) {
 			_d2.default.selectAll('svg').remove();
 	
 			var data = [];
 	
-			if (season == "all seasons") {
+			if (season == "career") {
 				dataobj['seasons_played'].forEach(function (season) {
 					var season_formatted = season - 1 + "-" + season.toString().slice(-2);
 	
@@ -37591,6 +37603,10 @@
 			// define scales
 			var x = _d2.default.scale.ordinal().domain(gamesplayed).rangePoints([0, w]);
 			var y = _d2.default.scale.linear().domain([0, maxYVal]).range([h, 0]);
+			var c = function c(x) {
+				var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+				return colors[x % colors.length];
+			};
 	
 			// define x/y axis
 			var xAxis = _d2.default.svg.axis().scale(x).orient("bottom");
@@ -37616,24 +37632,19 @@
 				}
 			});
 	
-			console.log("===== DATA =====");
-			console.log(data);
-			console.log("===== maxYVal =====");
-			console.log(maxYVal);
-			console.log("===== DOMAIN =====");
-			console.log(gamesplayed);
-	
 			// draw lines
-			var line = _d2.default.svg.line().x(function (d) {
-				return x(d[2]);
-			}).y(function (d) {
-				return y(d[27]);
-			});
+			selected_stats.forEach(function (statindex, i) {
+				var line = _d2.default.svg.line().x(function (d) {
+					return x(d[2]);
+				}).y(function (d) {
+					return y(d[statindex]);
+				});
 	
-			svg.append("path").datum(data).attr("class", "line").attr("d", line).style({ "stroke": "#0099ff" });
+				svg.append("path").datum(data).attr("class", "line").attr("d", line).style({ "stroke": c(i) });
 	
-			// append line label
-			svg.append("text").attr("x", x(data[data.length - 1][2])).attr("y", y(data[data.length - 1][27])).attr("dx", "5px").text(_chartUtil2.default.getStatKeyFromIndexInGamelog(27));
+				// append line label
+				svg.append("text").attr("x", x(data[data.length - 1][2])).attr("y", y(data[data.length - 1][statindex])).attr("dx", "5px").text(_chartUtil2.default.getStatKeyFromIndexInGamelog(statindex));
+			}.bind(this));
 		},
 	
 		drawVolumeChart: function drawVolumeChart(dataobj, season) {
@@ -37645,8 +37656,8 @@
 			var seasons = [];
 			seasons.push(_react2.default.createElement(
 				'option',
-				{ value: 'all seasons' },
-				'all seasons'
+				{ value: 'career' },
+				'career'
 			));
 			if (this.state.data_obj.seasons_played) {
 				this.state.data_obj.seasons_played.forEach(function (season) {
@@ -37691,7 +37702,7 @@
 						{ className: 'filters-container' },
 						_react2.default.createElement(
 							'select',
-							{ className: 'select-filter', defaultValue: 'all seasons', onChange: this.onSelectSeason },
+							{ className: 'select-filter', defaultValue: 'career', onChange: this.onSelectSeason },
 							seasons
 						)
 					),
