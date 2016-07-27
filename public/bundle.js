@@ -57,6 +57,10 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 168);
 	
+	var _messagepage = __webpack_require__(/*! ./messagepage */ 243);
+	
+	var _messagepage2 = _interopRequireDefault(_messagepage);
+	
 	var _threeAndD = __webpack_require__(/*! ./charts/three-and-d */ 229);
 	
 	var _threeAndD2 = _interopRequireDefault(_threeAndD);
@@ -126,7 +130,7 @@
 							null,
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: 'chart-4' },
+								{ to: '/messagepage' },
 								'Player Shot Volume Breakdown'
 							)
 						),
@@ -135,7 +139,7 @@
 							null,
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: 'chart-5' },
+								{ to: '/messagepage' },
 								'Player/Prospect Clustering'
 							)
 						)
@@ -144,14 +148,14 @@
 						'div',
 						{ id: 'footer' },
 						_react2.default.createElement(
-							'a',
-							{ href: '#' },
+							_reactRouter.Link,
+							{ to: '/messagepage' },
 							'Datasets'
 						),
 						' | ',
 						_react2.default.createElement(
 							'a',
-							{ href: '#' },
+							{ href: 'mailto:evanfeng55@gmail.com' },
 							'Contact'
 						)
 					)
@@ -183,12 +187,11 @@
 		_react2.default.createElement(
 			_reactRouter.Route,
 			{ path: '/', component: App },
-			_react2.default.createElement(_reactRouter.IndexRoute, { component: _threeAndD2.default }),
+			_react2.default.createElement(_reactRouter.IndexRoute, { component: _playerIndividualStats2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'three-and-d', component: _threeAndD2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'output-vs-salary', component: _outputVsSalary2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'individual-player-stats', component: _playerIndividualStats2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'chart-4', component: _threeAndD2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'chart-5', component: _threeAndD2.default })
+			_react2.default.createElement(_reactRouter.Route, { path: 'messagepage', component: _messagepage2.default })
 		)
 	), document.body);
 
@@ -37673,6 +37676,43 @@
 	});
 	
 	exports.default = PlayerIndividualStats;
+
+/***/ },
+/* 243 */
+/*!****************************!*\
+  !*** ./src/messagepage.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 38);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var MessagePage = _react2.default.createClass({
+		displayName: 'MessagePage',
+	
+	
+		render: function render() {
+			return _react2.default.createElement(
+				'p',
+				null,
+				'(unimplemented)'
+			);
+		}
+	
+	});
+	
+	exports.default = MessagePage;
 
 /***/ }
 /******/ ]);
