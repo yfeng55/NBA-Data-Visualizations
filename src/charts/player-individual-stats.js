@@ -8,8 +8,15 @@ import chartUtil from '../util/chart-util';
 var PlayerIndividualStats = React.createClass({
 
 	getInitialState: function (){
+
+		var c = function(x) {
+			var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#009BFF", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+			return colors[x % colors.length];
+		}
+
 		return { season_select: "career", player_select: "201939", data_obj: {}, selected_tab: "percentage",
-			selected_stats: [27, 22, 21, 23, 24, 14]
+			stat_fields: [27, 22, 21, 23, 24, 13], selected_stats: [27, 22],
+			colorscale: c
 		};
 	},
 
@@ -83,16 +90,19 @@ var PlayerIndividualStats = React.createClass({
 		}
 
 		var maxYVal = 0; var gamesplayed = [];
-		data.forEach(function(datum){
-			if(parseInt(datum[27]) > maxYVal){ console.log("NEW MAXY VAL: " + datum[27]); maxYVal = datum[27] }
-			gamesplayed.push(datum[2])
+		selected_stats.forEach(function(statindex){
+			data.forEach(function(datum){
+				if(parseInt(datum[statindex]) > maxYVal){ console.log("NEW MAXY VAL: " + datum[statindex]); maxYVal = datum[statindex] }
+				gamesplayed.push(datum[2])
+			}.bind(this))
 		}.bind(this))
+		
 
 		// chart dimensions
     	var p = 40, w = 900, h = 370;
     	var svg = d3.select("#chart2-individualstats").append("svg")
     		.attr("width", w + 3*p)
-			.attr("height", h + 4*p)
+			.attr("height", h + 3*p)
 			.append("g")
 			.attr("transform", "translate(" + 1.25*p + "," + p + ")");
 
@@ -100,11 +110,7 @@ var PlayerIndividualStats = React.createClass({
 		// define scales
 	    var x = d3.scale.ordinal().domain(gamesplayed).rangePoints([0, w]);
 	    var y = d3.scale.linear().domain([0, maxYVal]).range([h, 0]);
-	    var c = function(x) {
-			var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
-			return colors[x % colors.length];
-		}
-	    
+	    var c = this.state.colorscale;
 
 	    // define x/y axis
 	    var xAxis = d3.svg.axis().scale(x).orient("bottom");
@@ -143,7 +149,7 @@ var PlayerIndividualStats = React.createClass({
 		    	.datum(data)
 		    	.attr("class", "line")
 		    	.attr("d", line)
-		    	.style({"stroke": c(i) })
+		    	.style({"stroke": c(statindex) })
 
 	    	// append line label
 	    	svg.append("text")
@@ -160,9 +166,22 @@ var PlayerIndividualStats = React.createClass({
 	},
 
 
+	selectFilter: function(statindex){
+		if(this.state.selected_stats.includes(statindex)){
+			var newset = this.state.selected_stats;
+			newset.splice(newset.indexOf(statindex), 1);
+			this.setState({selected_stats: newset})
+		}else{
+			var newset = this.state.selected_stats;
+			newset.push(statindex);
+			this.setState({selected_stats: newset})
+		}
+	},
+
 
 	render: function() {
 
+		// create seasons select options //
 		const seasons = []
 		seasons.push(<option value="career">career</option>)
 		if(this.state.data_obj.seasons_played){
@@ -172,6 +191,26 @@ var PlayerIndividualStats = React.createClass({
 			}.bind(this))
 		}
 		seasons.reverse()
+
+
+		// create chart filters //
+		var filters = [];
+		this.state.stat_fields.forEach(function(statindex){
+			var filterstyle = null;
+			if(this.state.selected_stats.includes(statindex)){
+				filterstyle = { backgroundColor: this.state.colorscale(statindex), border: "3px solid " + this.state.colorscale(statindex) };
+			}else{
+				filterstyle = { backgroundColor: "#ffffff", border: "3px solid " + this.state.colorscale(statindex) }
+			}
+
+			var filter = (
+				<div className="statfilter">
+					<div className="filtercircle" style={filterstyle} onClick={this.selectFilter.bind(this, statindex)}></div>
+					{chartUtil.getStatKeyFromIndexInGamelog(statindex)}
+				</div>
+			)
+			filters.push(filter)
+		}.bind(this))
 
 
 		//set selected state of chart tabs
@@ -202,6 +241,8 @@ var PlayerIndividualStats = React.createClass({
 					<button id="percentage-tab" className={percentTabClass} onClick={this.onSwitchTabs}>Per-Game Stats</button>
 					<button id="volume-tab" className={volumeTabClass} onClick={this.onSwitchTabs}>Efficiency</button>
 					<div id="chart2-individualstats" className="chart"></div>
+
+					{filters}
 
 				</div>
 			</div>

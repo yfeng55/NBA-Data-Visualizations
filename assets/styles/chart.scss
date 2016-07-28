@@ -11,10 +11,11 @@
 	}
 }
 .chart{
-	min-height: 460px;
+	min-height: 400px;
 	width: 100%;
 	background-color: $lighter-gray;
 	font-size: 12px;
+	margin-bottom: 10px;
 }
 
 .tooltip {
@@ -141,6 +142,22 @@
 .line{
 	fill:none;
 	stroke-width: 1.2px;
+}
+
+.statfilter{
+	float:left;
+	width:100px;
+	line-height:13px;
+	margin-bottom:5px;
+	cursor:pointer;
+	font-size: 13px;
+}
+.filtercircle{
+	border-radius:50%;
+	width:13px;
+	height:13px;
+	display:inline-block;
+	margin-right:5px;
 }
 
 

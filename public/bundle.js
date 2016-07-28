@@ -37137,7 +37137,7 @@
 	                return "Steals";
 	            case 24:
 	                return "Blocks";
-	            case 14:
+	            case 13:
 	                return "3PM";
 	            case 2:
 	                return "GameDate";
@@ -37514,8 +37514,15 @@
 	
 	
 		getInitialState: function getInitialState() {
+	
+			var c = function c(x) {
+				var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#009BFF", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+				return colors[x % colors.length];
+			};
+	
 			return { season_select: "career", player_select: "201939", data_obj: {}, selected_tab: "percentage",
-				selected_stats: [27, 22, 21, 23, 24, 14]
+				stat_fields: [27, 22, 21, 23, 24, 13], selected_stats: [27, 22],
+				colorscale: c
 			};
 		},
 	
@@ -37587,26 +37594,25 @@
 			}
 	
 			var maxYVal = 0;var gamesplayed = [];
-			data.forEach(function (datum) {
-				if (parseInt(datum[27]) > maxYVal) {
-					console.log("NEW MAXY VAL: " + datum[27]);maxYVal = datum[27];
-				}
-				gamesplayed.push(datum[2]);
+			selected_stats.forEach(function (statindex) {
+				data.forEach(function (datum) {
+					if (parseInt(datum[statindex]) > maxYVal) {
+						console.log("NEW MAXY VAL: " + datum[statindex]);maxYVal = datum[statindex];
+					}
+					gamesplayed.push(datum[2]);
+				}.bind(this));
 			}.bind(this));
 	
 			// chart dimensions
 			var p = 40,
 			    w = 900,
 			    h = 370;
-			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 3 * p).attr("height", h + 4 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + p + ")");
+			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 3 * p).attr("height", h + 3 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + p + ")");
 	
 			// define scales
 			var x = _d2.default.scale.ordinal().domain(gamesplayed).rangePoints([0, w]);
 			var y = _d2.default.scale.linear().domain([0, maxYVal]).range([h, 0]);
-			var c = function c(x) {
-				var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
-				return colors[x % colors.length];
-			};
+			var c = this.state.colorscale;
 	
 			// define x/y axis
 			var xAxis = _d2.default.svg.axis().scale(x).orient("bottom");
@@ -37640,7 +37646,7 @@
 					return y(d[statindex]);
 				});
 	
-				svg.append("path").datum(data).attr("class", "line").attr("d", line).style({ "stroke": c(i) });
+				svg.append("path").datum(data).attr("class", "line").attr("d", line).style({ "stroke": c(statindex) });
 	
 				// append line label
 				svg.append("text").attr("x", x(data[data.length - 1][2])).attr("y", y(data[data.length - 1][statindex])).attr("dx", "5px").text(_chartUtil2.default.getStatKeyFromIndexInGamelog(statindex));
@@ -37651,8 +37657,21 @@
 			_d2.default.selectAll('svg').remove();
 		},
 	
+		selectFilter: function selectFilter(statindex) {
+			if (this.state.selected_stats.includes(statindex)) {
+				var newset = this.state.selected_stats;
+				newset.splice(newset.indexOf(statindex), 1);
+				this.setState({ selected_stats: newset });
+			} else {
+				var newset = this.state.selected_stats;
+				newset.push(statindex);
+				this.setState({ selected_stats: newset });
+			}
+		},
+	
 		render: function render() {
 	
+			// create seasons select options //
 			var seasons = [];
 			seasons.push(_react2.default.createElement(
 				'option',
@@ -37670,6 +37689,25 @@
 				}.bind(this));
 			}
 			seasons.reverse();
+	
+			// create chart filters //
+			var filters = [];
+			this.state.stat_fields.forEach(function (statindex) {
+				var filterstyle = null;
+				if (this.state.selected_stats.includes(statindex)) {
+					filterstyle = { backgroundColor: this.state.colorscale(statindex), border: "3px solid " + this.state.colorscale(statindex) };
+				} else {
+					filterstyle = { backgroundColor: "#ffffff", border: "3px solid " + this.state.colorscale(statindex) };
+				}
+	
+				var filter = _react2.default.createElement(
+					'div',
+					{ className: 'statfilter' },
+					_react2.default.createElement('div', { className: 'filtercircle', style: filterstyle, onClick: this.selectFilter.bind(this, statindex) }),
+					_chartUtil2.default.getStatKeyFromIndexInGamelog(statindex)
+				);
+				filters.push(filter);
+			}.bind(this));
 	
 			//set selected state of chart tabs
 			var percentTabClass = "charttab";var volumeTabClass = "charttab";
@@ -37716,7 +37754,8 @@
 						{ id: 'volume-tab', className: volumeTabClass, onClick: this.onSwitchTabs },
 						'Efficiency'
 					),
-					_react2.default.createElement('div', { id: 'chart2-individualstats', className: 'chart' })
+					_react2.default.createElement('div', { id: 'chart2-individualstats', className: 'chart' }),
+					filters
 				)
 			);
 		}

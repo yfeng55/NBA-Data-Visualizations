@@ -114,7 +114,7 @@ var ChartUtil = {
                 return "Steals";
             case 24:
                 return "Blocks";
-            case 14:
+            case 13:
                 return "3PM";
             case 2:
                 return "GameDate"
