@@ -6736,15 +6736,6 @@ button.close {
   font-size: 12px;
   margin-bottom: 10px; }
 
-.tooltip {
-  position: absolute;
-  width: 200px;
-  height: 28px;
-  background-color: black;
-  color: white;
-  pointer-events: none;
-  z-index: 2000; }
-
 /* Chart1 - 3andD */
 .axis path, .axis line {
   fill: none;
@@ -6753,6 +6744,15 @@ button.close {
 
 .dot {
   stroke-width: 2px; }
+
+.tooltip {
+  position: absolute;
+  width: 200px;
+  height: 28px;
+  background-color: black;
+  color: white;
+  pointer-events: none;
+  z-index: 2000; }
 
 .tooltip {
   padding: 8px;
@@ -6824,7 +6824,6 @@ button.close {
   padding: 10px;
   border: 1px solid #EEEEEE;
   color: #999999;
-  margin-bottom: -20px;
   margin-top: 20px;
   border-top-right-radius: .5em;
   border-top-left-radius: .5em; }
@@ -6845,15 +6844,27 @@ button.close {
   width: 100px;
   line-height: 13px;
   margin-bottom: 5px;
-  cursor: pointer;
   font-size: 13px; }
 
 .filtercircle {
   border-radius: 50%;
   width: 13px;
   height: 13px;
+  cursor: pointer;
   display: inline-block;
   margin-right: 5px; }
+
+.bar-tooltip {
+  position: absolute;
+  width: 100px;
+  /*height: 45px;*/
+  padding: 5px;
+  background: black;
+  color: white;
+  pointer-events: none;
+  border-radius: 3px;
+  font-size: 11px;
+  z-index: 2000; }
 
 body {
   font-family: 'Lato', sans-serif; }

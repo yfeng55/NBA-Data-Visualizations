@@ -116,12 +116,15 @@ var ChartUtil = {
                 return "Blocks";
             case 13:
                 return "3PM";
+            case 16:
+                return "FT";
             case 2:
                 return "GameDate"
             default:
                 return "ERROR";
         }    
     },
+
 
 
     containsPosition: function(position, selected_position){

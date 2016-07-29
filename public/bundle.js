@@ -37139,6 +37139,8 @@
 	                return "Blocks";
 	            case 13:
 	                return "3PM";
+	            case 16:
+	                return "FT";
 	            case 2:
 	                return "GameDate";
 	            default:
@@ -37542,7 +37544,7 @@
 			if (nextState.selected_tab == "percentage") {
 				this.drawPercentageChart(nextState.data_obj, nextState.season_select, nextState.selected_stats);
 			} else {
-				this.drawVolumeChart(nextState.data_obj, nextState.season_select);
+				this.drawShotBreakdownChart(nextState.data_obj, nextState.season_select);
 			}
 		},
 	
@@ -37607,7 +37609,7 @@
 			var p = 40,
 			    w = 900,
 			    h = 370;
-			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 3 * p).attr("height", h + 3 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + p + ")");
+			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 3 * p).attr("height", h + 2.5 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + .5 * p + ")");
 	
 			// define scales
 			var x = _d2.default.scale.ordinal().domain(gamesplayed).rangePoints([0, w]);
@@ -37653,8 +37655,133 @@
 			}.bind(this));
 		},
 	
-		drawVolumeChart: function drawVolumeChart(dataobj, season) {
+		drawShotBreakdownChart: function drawShotBreakdownChart(dataobj, season) {
 			_d2.default.selectAll('svg').remove();
+	
+			// add items in dataobj to the data array //
+			var data = [];
+			if (season == "career") {
+				dataobj['seasons_played'].forEach(function (season) {
+					var season_formatted = season - 1 + "-" + season.toString().slice(-2);
+					dataobj[season_formatted].forEach(function (datum) {
+						if (datum.length >= 27) {
+							data.push(datum);
+						}
+					}.bind(this));
+				}.bind(this));
+			} else {
+				dataobj[season].forEach(function (datum) {
+					if (datum.length >= 27) {
+						data.push(datum);
+					}
+				}.bind(this));
+			}
+	
+			// calculate max //
+			var maxYVal = 0;var gamesplayed = [];
+			data.forEach(function (datum) {
+				if (parseInt(datum[27]) > maxYVal) {
+					console.log("NEW MAXY VAL: " + datum[27]);maxYVal = datum[27];
+				}
+				gamesplayed.push(datum[2]);
+			}.bind(this));
+	
+			// format data array //
+			var dataformatted = [];
+			data.forEach(function (datum) {
+				var datumobj = { 'gamedate': datum[2], 'values': [] };
+				datumobj['values'].push({ 'type': 27, 'count': parseInt(datum[27]) - (parseInt(datum[13]) * 3 + parseInt(datum[16]) * 1) });
+				datumobj['values'].push({ 'type': 13, 'count': parseInt(datum[13]) * 3 });
+				datumobj['values'].push({ 'type': 16, 'count': parseInt(datum[16]) * 1 });
+	
+				dataformatted.push(datumobj);
+			}.bind(this));
+	
+			// add y1/y0 values //
+			console.log("===== formatted data =====");
+			console.log(dataformatted);
+	
+			for (var i = 0; i < dataformatted.length; i++) {
+				for (var j = 0; j < dataformatted[i].values.length; j++) {
+					var y1 = 0;
+					for (var k = j - 1; k >= 0; k--) {
+						y1 += dataformatted[i].values[k].count;
+					}
+					dataformatted[i].values[j].y1 = y1;
+					dataformatted[i].values[j].y0 = dataformatted[i].values[j].count;
+				}
+			}
+	
+			// chart dimensions //
+			var p = 40,
+			    w = 900,
+			    h = 370,
+			    bar_w = w / dataformatted.length;
+			var svg = _d2.default.select("#chart2-individualstats").append("svg").attr("width", w + 3 * p).attr("height", h + 2.5 * p).append("g").attr("transform", "translate(" + 1.25 * p + "," + .5 * p + ")");
+	
+			// define scales //
+			var x = _d2.default.scale.ordinal().domain(gamesplayed).rangeBands([0, w]);
+			var y = _d2.default.scale.linear().domain([0, maxYVal]).range([h, 0]);
+			var c = this.state.colorscale;
+	
+			// define x/y axis //
+			var xAxis = _d2.default.svg.axis().scale(x).orient("bottom");
+			var yAxis = _d2.default.svg.axis().scale(y).orient("left");
+	
+			var tickwidth = Math.round(dataformatted.length / w * 32.9268);
+			console.log("===== tick width =====");
+			console.log(tickwidth);
+	
+			svg.append('g').attr('class', 'axis').call(xAxis).attr("transform", "translate(" + 0 + "," + h + ")").selectAll("text").style("text-anchor", "end").attr("dx", "-.5em").attr("dy", "0em").attr("transform", function (d) {
+				return "rotate(-45)";
+			}).each(function (d, i) {
+				if (Math.ceil(i % tickwidth) != 0 && gamesplayed.length > 60) {
+					this.remove();
+				}
+			});
+	
+			svg.append("g").attr("class", "axis").call(yAxis);
+	
+			svg.selectAll(".tick").each(function (d, i) {
+				if (d == 0) {
+					this.remove();
+				}
+			});
+	
+			// define tooltip //
+			var div = _d2.default.select("body").append("div").attr("class", "bar-tooltip").style("opactiy", 0);
+	
+			// add stacked bar containers //
+			var barstack = svg.selectAll(".barstack").data(dataformatted).enter().append("g").attr("class", "g barstack").attr("transform", function (d) {
+				return "translate(" + x(d.gamedate) + ",0)";
+			}).on("mouseover", function (d) {
+	
+				var divcontent = "";
+				divcontent += "<p><b>" + d.gamedate + "</b></p>";
+				var total = 0;
+				d.values.forEach(function (val) {
+					var tooltiplabel = _chartUtil2.default.getStatKeyFromIndexInGamelog(val.type) == "Points" ? "2 Point FGs" : _chartUtil2.default.getStatKeyFromIndexInGamelog(val.type);
+					divcontent += tooltiplabel + ": " + val.count + "<br/>";
+					total += val.count;
+				}.bind(this));
+				divcontent += "<br/>Total: " + total;
+	
+				div.style("opacity", 0.8);
+				div.html(divcontent).style("left", _d2.default.event.pageX - 100 + "px").style("top", _d2.default.event.pageY - 58 + "px");
+			}).on("mouseout", function () {
+				div.style("opacity", 0);
+			});
+	
+			// add stacked bars to containers //
+			barstack.selectAll("rect").data(function (d) {
+				return d.values;
+			}).enter().append("rect").attr("width", bar_w).attr("y", function (d) {
+				return y(d.count + d.y1);
+			}).attr("height", function (d) {
+				return h - y(d.count);
+			}).style("fill", function (d) {
+				return c(d.type);
+			});
 		},
 	
 		selectFilter: function selectFilter(statindex) {
@@ -37692,22 +37819,24 @@
 	
 			// create chart filters //
 			var filters = [];
-			this.state.stat_fields.forEach(function (statindex) {
-				var filterstyle = null;
-				if (this.state.selected_stats.includes(statindex)) {
-					filterstyle = { backgroundColor: this.state.colorscale(statindex), border: "3px solid " + this.state.colorscale(statindex) };
-				} else {
-					filterstyle = { backgroundColor: "#ffffff", border: "3px solid " + this.state.colorscale(statindex) };
-				}
+			if (this.state.selected_tab == "percentage") {
+				this.state.stat_fields.forEach(function (statindex) {
+					var filterstyle = null;
+					if (this.state.selected_stats.includes(statindex)) {
+						filterstyle = { backgroundColor: this.state.colorscale(statindex), border: "3px solid " + this.state.colorscale(statindex) };
+					} else {
+						filterstyle = { backgroundColor: "#ffffff", border: "3px solid " + this.state.colorscale(statindex) };
+					}
 	
-				var filter = _react2.default.createElement(
-					'div',
-					{ className: 'statfilter' },
-					_react2.default.createElement('div', { className: 'filtercircle', style: filterstyle, onClick: this.selectFilter.bind(this, statindex) }),
-					_chartUtil2.default.getStatKeyFromIndexInGamelog(statindex)
-				);
-				filters.push(filter);
-			}.bind(this));
+					var filter = _react2.default.createElement(
+						'div',
+						{ className: 'statfilter' },
+						_react2.default.createElement('div', { className: 'filtercircle', style: filterstyle, onClick: this.selectFilter.bind(this, statindex) }),
+						_chartUtil2.default.getStatKeyFromIndexInGamelog(statindex)
+					);
+					filters.push(filter);
+				}.bind(this));
+			}
 	
 			//set selected state of chart tabs
 			var percentTabClass = "charttab";var volumeTabClass = "charttab";
@@ -37747,12 +37876,12 @@
 					_react2.default.createElement(
 						'button',
 						{ id: 'percentage-tab', className: percentTabClass, onClick: this.onSwitchTabs },
-						'Per-Game Stats'
+						'Counting Stats'
 					),
 					_react2.default.createElement(
 						'button',
 						{ id: 'volume-tab', className: volumeTabClass, onClick: this.onSwitchTabs },
-						'Efficiency'
+						'Breakdown'
 					),
 					_react2.default.createElement('div', { id: 'chart2-individualstats', className: 'chart' }),
 					filters
