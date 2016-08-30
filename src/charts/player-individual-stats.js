@@ -92,7 +92,7 @@ var PlayerIndividualStats = React.createClass({
 		var maxYVal = 0; var gamesplayed = [];
 		selected_stats.forEach(function(statindex){
 			data.forEach(function(datum){
-				if(parseInt(datum[statindex]) > maxYVal){ console.log("NEW MAXY VAL: " + datum[statindex]); maxYVal = datum[statindex] }
+				if(parseInt(datum[statindex]) > maxYVal){ maxYVal = datum[statindex] }
 				gamesplayed.push(datum[2])
 			}.bind(this))
 		}.bind(this))
@@ -117,8 +117,6 @@ var PlayerIndividualStats = React.createClass({
 	    var yAxis = d3.svg.axis().scale(y).orient("left");
 
 	    var tickwidth = Math.round((data.length / w) * 32.9268)
-	    console.log("===== tick width =====")
-	    console.log(tickwidth)
 
 	    svg.append('g')
 	    	.attr('class', 'axis')
@@ -182,7 +180,7 @@ var PlayerIndividualStats = React.createClass({
 		// calculate max //
 		var maxYVal = 0; var gamesplayed = [];
 		data.forEach(function(datum){
-			if(parseInt(datum[27]) > maxYVal){ console.log("NEW MAXY VAL: " + datum[27]); maxYVal = datum[27] }
+			if(parseInt(datum[27]) > maxYVal){ maxYVal = datum[27] }
 			gamesplayed.push(datum[2])
 		}.bind(this))
 		
@@ -197,9 +195,6 @@ var PlayerIndividualStats = React.createClass({
 			dataformatted.push(datumobj);
 		}.bind(this))
 
-		// add y1/y0 values //
-		console.log("===== formatted data =====")
-		console.log(dataformatted)
 
 		for(var i=0; i<dataformatted.length; i++){
 			for(var j=0; j<dataformatted[i].values.length; j++){
@@ -232,8 +227,6 @@ var PlayerIndividualStats = React.createClass({
 	    var yAxis = d3.svg.axis().scale(y).orient("left");
 
 	    var tickwidth = Math.round((dataformatted.length / w) * 32.9268)
-	    console.log("===== tick width =====")
-	    console.log(tickwidth)
 
 	    svg.append('g')
 	    	.attr('class', 'axis')
@@ -352,8 +345,6 @@ var PlayerIndividualStats = React.createClass({
 		percentTabClass += (this.state.selected_tab == "percentage") ? " selected" : "";
 		volumeTabClass += (this.state.selected_tab == "volume") ? " selected" : "";
 
-		console.log("PERCENT TAB CLASS: " + percentTabClass);
-		console.log("VOLUME TAB CLASS: " + volumeTabClass);		
 
 		return (
 			<div>
