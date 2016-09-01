@@ -24,3 +24,12 @@ h3{
 .content-container{
 	overflow: hidden;
 }
+
+/* autcomplete field */
+.autocomplete-div{
+	display: inline-block;
+
+	input{
+		width: 350px;
+	}
+}
