@@ -21,17 +21,19 @@ var PlayerIndividualStats = React.createClass({
 		return { season_select: "career", data_obj: {}, selected_tab: "percentage",
 			stat_fields: [27, 22, 21, 23, 24, 13], selected_stats: [27, 22],
 			colorscale: c,
-			value: {name: 'Brandon Rush', abbr: '201575'}
+			value: '201575'
 		};
 	},
 
 	componentDidMount: function(){
 
 		// get gamelogs data for selected player
-		var gamelogsurl = config.api + '/gamelogs/' + this.state.value.abbr;
+		var gamelogsurl = config.api + '/gamelogs/' + this.state.value;
 		xhr.get(gamelogsurl, function(err, resp){
 			var playerstats_obj = JSON.parse(resp.body)[0]
 			this.setState({data_obj: playerstats_obj});
+
+			this.setState({value: 'Brandon Rush'});
 		}.bind(this))
 
 	},
@@ -64,7 +66,7 @@ var PlayerIndividualStats = React.createClass({
 		}.bind(this))
 
 		this.setState({season_select: "career"})
-		this.setState({value: value});
+		this.setState({value: event});
 	},
 
 	onSelectSeason: function(event){
@@ -362,7 +364,7 @@ var PlayerIndividualStats = React.createClass({
 				<h3 className="inline-header">Player Stats: </h3>
 
 				<Autocomplete
-					value={this.state.value.name}
+					value={this.state.value}
 					items={getPlayers()}
 					getItemValue={(item) => item.name}
 					shouldItemRender={matchStateToTerm}
