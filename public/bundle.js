@@ -57,19 +57,19 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 168);
 	
-	var _messagepage = __webpack_require__(/*! ./messagepage */ 243);
+	var _messagepage = __webpack_require__(/*! ./messagepage */ 229);
 	
 	var _messagepage2 = _interopRequireDefault(_messagepage);
 	
-	var _threeAndD = __webpack_require__(/*! ./charts/three-and-d */ 229);
+	var _threeAndD = __webpack_require__(/*! ./charts/three-and-d */ 230);
 	
 	var _threeAndD2 = _interopRequireDefault(_threeAndD);
 	
-	var _outputVsSalary = __webpack_require__(/*! ./charts/output-vs-salary */ 241);
+	var _outputVsSalary = __webpack_require__(/*! ./charts/output-vs-salary */ 242);
 	
 	var _outputVsSalary2 = _interopRequireDefault(_outputVsSalary);
 	
-	var _playerIndividualStats = __webpack_require__(/*! ./charts/player-individual-stats */ 242);
+	var _playerIndividualStats = __webpack_require__(/*! ./charts/player-individual-stats */ 243);
 	
 	var _playerIndividualStats2 = _interopRequireDefault(_playerIndividualStats);
 	
@@ -26660,6 +26660,43 @@
 
 /***/ },
 /* 229 */
+/*!****************************!*\
+  !*** ./src/messagepage.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 38);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var MessagePage = _react2.default.createClass({
+		displayName: 'MessagePage',
+	
+	
+		render: function render() {
+			return _react2.default.createElement(
+				'p',
+				null,
+				'(unimplemented)'
+			);
+		}
+	
+	});
+	
+	exports.default = MessagePage;
+
+/***/ },
+/* 230 */
 /*!***********************************!*\
   !*** ./src/charts/three-and-d.js ***!
   \***********************************/
@@ -26675,19 +26712,19 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _config = __webpack_require__(/*! ../config */ 230);
+	var _config = __webpack_require__(/*! ../config */ 231);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _xhr = __webpack_require__(/*! xhr */ 231);
+	var _xhr = __webpack_require__(/*! xhr */ 232);
 	
 	var _xhr2 = _interopRequireDefault(_xhr);
 	
-	var _d = __webpack_require__(/*! d3 */ 239);
+	var _d = __webpack_require__(/*! d3 */ 240);
 	
 	var _d2 = _interopRequireDefault(_d);
 	
-	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 240);
+	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 241);
 	
 	var _chartUtil2 = _interopRequireDefault(_chartUtil);
 	
@@ -26987,7 +27024,7 @@
 	exports.default = ThreeAndD;
 
 /***/ },
-/* 230 */
+/* 231 */
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
@@ -27005,18 +27042,18 @@
 	exports.default = config;
 
 /***/ },
-/* 231 */
+/* 232 */
 /*!************************!*\
   !*** ./~/xhr/index.js ***!
   \************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var window = __webpack_require__(/*! global/window */ 232)
-	var once = __webpack_require__(/*! once */ 233)
-	var isFunction = __webpack_require__(/*! is-function */ 234)
-	var parseHeaders = __webpack_require__(/*! parse-headers */ 235)
-	var xtend = __webpack_require__(/*! xtend */ 238)
+	var window = __webpack_require__(/*! global/window */ 233)
+	var once = __webpack_require__(/*! once */ 234)
+	var isFunction = __webpack_require__(/*! is-function */ 235)
+	var parseHeaders = __webpack_require__(/*! parse-headers */ 236)
+	var xtend = __webpack_require__(/*! xtend */ 239)
 	
 	module.exports = createXHR
 	createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
@@ -27233,7 +27270,7 @@
 
 
 /***/ },
-/* 232 */
+/* 233 */
 /*!**********************************!*\
   !*** ./~/xhr/~/global/window.js ***!
   \**********************************/
@@ -27252,7 +27289,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 233 */
+/* 234 */
 /*!******************************!*\
   !*** ./~/xhr/~/once/once.js ***!
   \******************************/
@@ -27280,7 +27317,7 @@
 
 
 /***/ },
-/* 234 */
+/* 235 */
 /*!**************************************!*\
   !*** ./~/xhr/~/is-function/index.js ***!
   \**************************************/
@@ -27304,14 +27341,14 @@
 
 
 /***/ },
-/* 235 */
+/* 236 */
 /*!************************************************!*\
   !*** ./~/xhr/~/parse-headers/parse-headers.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var trim = __webpack_require__(/*! trim */ 236)
-	  , forEach = __webpack_require__(/*! for-each */ 237)
+	var trim = __webpack_require__(/*! trim */ 237)
+	  , forEach = __webpack_require__(/*! for-each */ 238)
 	  , isArray = function(arg) {
 	      return Object.prototype.toString.call(arg) === '[object Array]';
 	    }
@@ -27343,7 +27380,7 @@
 	}
 
 /***/ },
-/* 236 */
+/* 237 */
 /*!***********************************************!*\
   !*** ./~/xhr/~/parse-headers/~/trim/index.js ***!
   \***********************************************/
@@ -27366,13 +27403,13 @@
 
 
 /***/ },
-/* 237 */
+/* 238 */
 /*!***************************************************!*\
   !*** ./~/xhr/~/parse-headers/~/for-each/index.js ***!
   \***************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(/*! is-function */ 234)
+	var isFunction = __webpack_require__(/*! is-function */ 235)
 	
 	module.exports = forEach
 	
@@ -27421,7 +27458,7 @@
 
 
 /***/ },
-/* 238 */
+/* 239 */
 /*!************************************!*\
   !*** ./~/xhr/~/xtend/immutable.js ***!
   \************************************/
@@ -27449,7 +27486,7 @@
 
 
 /***/ },
-/* 239 */
+/* 240 */
 /*!********************!*\
   !*** ./~/d3/d3.js ***!
   \********************/
@@ -37011,7 +37048,7 @@
 	}();
 
 /***/ },
-/* 240 */
+/* 241 */
 /*!********************************!*\
   !*** ./src/util/chart-util.js ***!
   \********************************/
@@ -37191,7 +37228,7 @@
 	exports.default = ChartUtil;
 
 /***/ },
-/* 241 */
+/* 242 */
 /*!****************************************!*\
   !*** ./src/charts/output-vs-salary.js ***!
   \****************************************/
@@ -37207,19 +37244,19 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _config = __webpack_require__(/*! ../config */ 230);
+	var _config = __webpack_require__(/*! ../config */ 231);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _xhr = __webpack_require__(/*! xhr */ 231);
+	var _xhr = __webpack_require__(/*! xhr */ 232);
 	
 	var _xhr2 = _interopRequireDefault(_xhr);
 	
-	var _d = __webpack_require__(/*! d3 */ 239);
+	var _d = __webpack_require__(/*! d3 */ 240);
 	
 	var _d2 = _interopRequireDefault(_d);
 	
-	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 240);
+	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 241);
 	
 	var _chartUtil2 = _interopRequireDefault(_chartUtil);
 	
@@ -37477,7 +37514,7 @@
 	exports.default = OutputVsSalary;
 
 /***/ },
-/* 242 */
+/* 243 */
 /*!***********************************************!*\
   !*** ./src/charts/player-individual-stats.js ***!
   \***********************************************/
@@ -37493,19 +37530,19 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _config = __webpack_require__(/*! ../config */ 230);
+	var _config = __webpack_require__(/*! ../config */ 231);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _xhr = __webpack_require__(/*! xhr */ 231);
+	var _xhr = __webpack_require__(/*! xhr */ 232);
 	
 	var _xhr2 = _interopRequireDefault(_xhr);
 	
-	var _d = __webpack_require__(/*! d3 */ 239);
+	var _d = __webpack_require__(/*! d3 */ 240);
 	
 	var _d2 = _interopRequireDefault(_d);
 	
-	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 240);
+	var _chartUtil = __webpack_require__(/*! ../util/chart-util */ 241);
 	
 	var _chartUtil2 = _interopRequireDefault(_chartUtil);
 	
@@ -37892,43 +37929,6 @@
 	});
 	
 	exports.default = PlayerIndividualStats;
-
-/***/ },
-/* 243 */
-/*!****************************!*\
-  !*** ./src/messagepage.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(/*! react-dom */ 38);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var MessagePage = _react2.default.createClass({
-		displayName: 'MessagePage',
-	
-	
-		render: function render() {
-			return _react2.default.createElement(
-				'p',
-				null,
-				'(unimplemented)'
-			);
-		}
-	
-	});
-	
-	exports.default = MessagePage;
 
 /***/ }
 /******/ ]);
