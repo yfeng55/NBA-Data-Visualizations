@@ -4,6 +4,10 @@ import xhr from 'xhr';
 import d3 from 'd3';
 import chartUtil from '../util/chart-util';
 
+import { getPlayers, matchStateToTerm, sortStates, styles } from '../util/autocompletestates'
+import Autocomplete from '../util/autocomplete'
+
+
 
 var PlayerIndividualStats = React.createClass({
 
@@ -14,19 +18,22 @@ var PlayerIndividualStats = React.createClass({
 			return colors[x % colors.length];
 		}
 
-		return { season_select: "career", player_select: "201939", data_obj: {}, selected_tab: "percentage",
+		return { season_select: "career", data_obj: {}, selected_tab: "percentage",
 			stat_fields: [27, 22, 21, 23, 24, 13], selected_stats: [27, 22],
-			colorscale: c
+			colorscale: c,
+			value: '201575'
 		};
 	},
 
 	componentDidMount: function(){
 
 		// get gamelogs data for selected player
-		var gamelogsurl = config.api + '/gamelogs/' + this.state.player_select;
+		var gamelogsurl = config.api + '/gamelogs/' + this.state.value;
 		xhr.get(gamelogsurl, function(err, resp){
 			var playerstats_obj = JSON.parse(resp.body)[0]
 			this.setState({data_obj: playerstats_obj});
+
+			this.setState({value: 'Brandon Rush'});
 		}.bind(this))
 
 	},
@@ -45,15 +52,21 @@ var PlayerIndividualStats = React.createClass({
 
 
 	///// event handlers /////
-	onSelectPlayer: function(event){
-		var gamelogs = config.api + '/gamelogs/' + event.target.value;
+	onSelectPlayer: function(event, value){
+
+		console.log("===== onSelectPlayer() =====")
+		console.log(event)
+		console.log(value)
+
+		var gamelogs = config.api + '/gamelogs/' + value.abbr;
 		xhr.get(gamelogs, function(err, resp){
 			var playerstats_obj = JSON.parse(resp.body)[0]
 			this.setState({data_obj: playerstats_obj});
 			d3.select('#loading-spinner').style('display', 'none')
 		}.bind(this))
 
-		this.setState({player_select: event.target.value});
+		this.setState({season_select: "career"})
+		this.setState({value: event});
 	},
 
 	onSelectSeason: function(event){
@@ -92,7 +105,7 @@ var PlayerIndividualStats = React.createClass({
 		var maxYVal = 0; var gamesplayed = [];
 		selected_stats.forEach(function(statindex){
 			data.forEach(function(datum){
-				if(parseInt(datum[statindex]) > maxYVal){ console.log("NEW MAXY VAL: " + datum[statindex]); maxYVal = datum[statindex] }
+				if(parseInt(datum[statindex]) > maxYVal){ maxYVal = datum[statindex] }
 				gamesplayed.push(datum[2])
 			}.bind(this))
 		}.bind(this))
@@ -117,8 +130,6 @@ var PlayerIndividualStats = React.createClass({
 	    var yAxis = d3.svg.axis().scale(y).orient("left");
 
 	    var tickwidth = Math.round((data.length / w) * 32.9268)
-	    console.log("===== tick width =====")
-	    console.log(tickwidth)
 
 	    svg.append('g')
 	    	.attr('class', 'axis')
@@ -182,7 +193,7 @@ var PlayerIndividualStats = React.createClass({
 		// calculate max //
 		var maxYVal = 0; var gamesplayed = [];
 		data.forEach(function(datum){
-			if(parseInt(datum[27]) > maxYVal){ console.log("NEW MAXY VAL: " + datum[27]); maxYVal = datum[27] }
+			if(parseInt(datum[27]) > maxYVal){ maxYVal = datum[27] }
 			gamesplayed.push(datum[2])
 		}.bind(this))
 		
@@ -197,9 +208,6 @@ var PlayerIndividualStats = React.createClass({
 			dataformatted.push(datumobj);
 		}.bind(this))
 
-		// add y1/y0 values //
-		console.log("===== formatted data =====")
-		console.log(dataformatted)
 
 		for(var i=0; i<dataformatted.length; i++){
 			for(var j=0; j<dataformatted[i].values.length; j++){
@@ -232,8 +240,6 @@ var PlayerIndividualStats = React.createClass({
 	    var yAxis = d3.svg.axis().scale(y).orient("left");
 
 	    var tickwidth = Math.round((dataformatted.length / w) * 32.9268)
-	    console.log("===== tick width =====")
-	    console.log(tickwidth)
 
 	    svg.append('g')
 	    	.attr('class', 'axis')
@@ -314,13 +320,13 @@ var PlayerIndividualStats = React.createClass({
 
 		// create seasons select options //
 		const seasons = []
-		seasons.push(<option value="career">career</option>)
 		if(this.state.data_obj.seasons_played){
 			this.state.data_obj.seasons_played.forEach(function(season){
 				var season_formatted = season-1 + "-" + season.toString().slice(-2)
 				seasons.push(<option value={season_formatted}>{season_formatted}</option>)
 			}.bind(this))
 		}
+		seasons.push(<option value="career">career</option>)
 		seasons.reverse()
 
 
@@ -352,37 +358,39 @@ var PlayerIndividualStats = React.createClass({
 		percentTabClass += (this.state.selected_tab == "percentage") ? " selected" : "";
 		volumeTabClass += (this.state.selected_tab == "volume") ? " selected" : "";
 
-		console.log("PERCENT TAB CLASS: " + percentTabClass);
-		console.log("VOLUME TAB CLASS: " + volumeTabClass);		
 
 		return (
 			<div>
-				<h3 className="inline-header">Individual Stats View </h3>
-				<input ref="player_select_field" name="player_select_field" className="stat_select_field" type="text"
-            		defaultValue={this.state.player_select} onChange={this.onSelectPlayer}/>
+				<h3 className="inline-header">Player Stats: </h3>
+
+				<Autocomplete
+					value={this.state.value}
+					items={getPlayers()}
+					getItemValue={(item) => item.name}
+					shouldItemRender={matchStateToTerm}
+					sortItems={sortStates}
+					onChange={(event, value) => this.setState({ value })}
+					onSelect={this.onSelectPlayer}
+					renderItem={(item, isHighlighted) => ( <div style={isHighlighted ? styles.highlightedItem : styles.item} key={item.abbr}>{item.name}</div> )}
+				/>
+
 
 				<div className="chart-container">
-
 					<div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../public/imgs/bball-outline.svg" /></div>
-
 					<div className="filters-container">
 						<select className="select-filter" defaultValue="career" onChange={this.onSelectSeason}>
 							{seasons}
 						</select>
 					</div>
 
-
 					<button id="percentage-tab" className={percentTabClass} onClick={this.onSwitchTabs}>Counting Stats</button>
 					<button id="volume-tab" className={volumeTabClass} onClick={this.onSwitchTabs}>Breakdown</button>
 					<div id="chart2-individualstats" className="chart"></div>
-
 					{filters}
-
 				</div>
 			</div>
 		);
 	}
-
 
 
 })

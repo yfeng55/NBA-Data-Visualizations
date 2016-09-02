@@ -6878,4 +6878,10 @@ h3 {
 .content-container {
   overflow: hidden; }
 
+/* autcomplete field */
+.autocomplete-div {
+  display: inline-block; }
+  .autocomplete-div input {
+    width: 350px; }
+
 /*# sourceMappingURL=main.css.map */
