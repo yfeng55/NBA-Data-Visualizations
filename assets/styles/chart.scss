@@ -121,10 +121,10 @@
 /* Chart3 - Individual Player Stats */
 .charttab{
 	display: inline-block;
-	padding: 10px;
+	padding: 5px;
 	border: 1px solid $lighter-gray;
 	color: $dark-gray;
-	margin-top: 20px;
+	margin-top: 30px;
     border-top-right-radius: .5em;
     border-top-left-radius: .5em;
 	&:focus{
@@ -133,7 +133,7 @@
 }
 .charttab.selected{
 	font-weight: bold;
-	background-color: $light-gray;
+	background-color: $lighter-gray;
 	color: black;
 }
 
@@ -171,8 +171,17 @@
 	z-index: 2000;
 }
 
+.playerprofile{
+	height: 200px;
+	width: 100%;
+	background-color: $darker-blue;
+	margin-bottom: -105px;
+	color: white;
+}
 
-
+.individual-filters-container .select-filter{
+	margin-left: 230px;
+}
 
 
 

@@ -37552,6 +37552,10 @@
 	
 	var _autocomplete2 = _interopRequireDefault(_autocomplete);
 	
+	var _playerinfobox = __webpack_require__(/*! ./components/playerinfobox */ 249);
+	
+	var _playerinfobox2 = _interopRequireDefault(_playerinfobox);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var PlayerIndividualStats = _react2.default.createClass({
@@ -37577,6 +37581,7 @@
 			// get gamelogs data for selected player
 			var gamelogsurl = _config2.default.api + '/gamelogs/' + this.state.value;
 			_xhr2.default.get(gamelogsurl, function (err, resp) {
+	
 				var playerstats_obj = JSON.parse(resp.body)[0];
 				this.setState({ data_obj: playerstats_obj });
 	
@@ -37924,9 +37929,10 @@
 						{ id: 'loading-spinner', className: 'loading-spinner', ref: 'loading-spinner' },
 						_react2.default.createElement('img', { className: 'spinning-ball', src: '../../public/imgs/bball-outline.svg' })
 					),
+					_react2.default.createElement(_playerinfobox2.default, { name: this.state.data_obj.player_name, id: this.state.data_obj.player_id }),
 					_react2.default.createElement(
 						'div',
-						{ className: 'filters-container' },
+						{ className: 'individual-filters-container' },
 						_react2.default.createElement(
 							'select',
 							{ className: 'select-filter', defaultValue: 'career', onChange: this.onSelectSeason },
@@ -38962,6 +38968,53 @@
 	  viewportWidth: 0,
 	  viewportHeight: 0
 	}, domUtils);
+
+/***/ },
+/* 249 */
+/*!************************************************!*\
+  !*** ./src/charts/components/playerinfobox.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _d = __webpack_require__(/*! d3 */ 240);
+	
+	var _d2 = _interopRequireDefault(_d);
+	
+	var _chartUtil = __webpack_require__(/*! ../../util/chart-util */ 241);
+	
+	var _chartUtil2 = _interopRequireDefault(_chartUtil);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var PlayerInfo = _react2.default.createClass({
+	  displayName: 'PlayerInfo',
+	
+	
+	  render: function render() {
+	
+	    var imgsrc = "../../../public/imgs/profilepics/large/" + this.props.id + ".png";
+	
+	    return _react2.default.createElement(
+	      'div',
+	      { id: 'playerprofile', className: 'playerprofile' },
+	      _react2.default.createElement('img', { src: imgsrc }),
+	      this.props.name
+	    );
+	  }
+	
+	});
+	
+	exports.default = PlayerInfo;
 
 /***/ }
 /******/ ]);

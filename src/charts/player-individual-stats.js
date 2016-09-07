@@ -6,7 +6,7 @@ import chartUtil from '../util/chart-util';
 
 import { getPlayers, matchStateToTerm, sortStates, styles } from '../util/autocompletestates'
 import Autocomplete from '../util/autocomplete'
-
+import PlayerInfo from './components/playerinfobox'
 
 
 var PlayerIndividualStats = React.createClass({
@@ -30,6 +30,7 @@ var PlayerIndividualStats = React.createClass({
 		// get gamelogs data for selected player
 		var gamelogsurl = config.api + '/gamelogs/' + this.state.value;
 		xhr.get(gamelogsurl, function(err, resp){
+
 			var playerstats_obj = JSON.parse(resp.body)[0]
 			this.setState({data_obj: playerstats_obj});
 
@@ -377,7 +378,10 @@ var PlayerIndividualStats = React.createClass({
 
 				<div className="chart-container">
 					<div id="loading-spinner" className="loading-spinner" ref="loading-spinner"><img className="spinning-ball" src="../../public/imgs/bball-outline.svg" /></div>
-					<div className="filters-container">
+					
+					<PlayerInfo name={this.state.data_obj.player_name} id={this.state.data_obj.player_id} />
+
+					<div className="individual-filters-container">
 						<select className="select-filter" defaultValue="career" onChange={this.onSelectSeason}>
 							{seasons}
 						</select>
