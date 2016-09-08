@@ -37185,6 +37185,19 @@
 	        }
 	    },
 	
+	    getScoringBreakdownLabel: function getScoringBreakdownLabel(index) {
+	        switch (index) {
+	            case 27:
+	                return "Points from 2pt FGs";
+	            case 13:
+	                return "Points from 3pt FGs";
+	            case 16:
+	                return "Points from FTs";
+	            default:
+	                return "ERROR";
+	        }
+	    },
+	
 	    containsPosition: function containsPosition(position, selected_position) {
 	        if (position == selected_position) {
 	            return true;
@@ -37565,7 +37578,7 @@
 		getInitialState: function getInitialState() {
 	
 			var c = function c(x) {
-				var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#009BFF", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+				var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#009BFF", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#39e600", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
 				return colors[x % colors.length];
 			};
 	
@@ -37809,14 +37822,14 @@
 				divcontent += "<p><b>" + d.gamedate + "</b></p>";
 				var total = 0;
 				d.values.forEach(function (val) {
-					var tooltiplabel = _chartUtil2.default.getStatKeyFromIndexInGamelog(val.type) == "Points" ? "2 Point FGs" : _chartUtil2.default.getStatKeyFromIndexInGamelog(val.type);
+					var tooltiplabel = _chartUtil2.default.getScoringBreakdownLabel(val.type);
 					divcontent += tooltiplabel + ": " + val.count + "<br/>";
 					total += val.count;
 				}.bind(this));
-				divcontent += "<br/>Total: " + total;
+				divcontent += "<br/>Total Points: " + total;
 	
 				div.style("opacity", 0.8);
-				div.html(divcontent).style("left", _d2.default.event.pageX - 100 + "px").style("top", _d2.default.event.pageY - 58 + "px");
+				div.html(divcontent).style("left", _d2.default.event.pageX - 150 + "px").style("top", _d2.default.event.pageY - 58 + "px").style("width", 150);
 			}).on("mouseout", function () {
 				div.style("opacity", 0);
 			});
@@ -37829,7 +37842,7 @@
 			}).attr("height", function (d) {
 				return h - y(d.count);
 			}).style("fill", function (d) {
-				return c(d.type);
+				console.log(c(d.type));return c(d.type);
 			});
 		},
 	
@@ -37899,7 +37912,7 @@
 				_react2.default.createElement(
 					'h3',
 					{ className: 'inline-header' },
-					'Player Stats: '
+					'Player Search: '
 				),
 				_react2.default.createElement(_autocomplete2.default, {
 					value: this.state.value,
@@ -37947,7 +37960,7 @@
 					_react2.default.createElement(
 						'button',
 						{ id: 'volume-tab', className: volumeTabClass, onClick: this.onSwitchTabs },
-						'Breakdown'
+						'Scoring Breakdown'
 					),
 					_react2.default.createElement('div', { id: 'chart2-individualstats', className: 'chart' }),
 					filters
@@ -38080,6 +38093,7 @@
 	        fontSize: '90%',
 	        position: 'fixed',
 	        overflow: 'auto',
+	        zIndex: '5000',
 	        maxHeight: '50%' },
 	      // TODO: don't cheat, let it flow to the bottom
 	      autoHighlight: true,
@@ -39000,15 +39014,28 @@
 	  displayName: 'PlayerInfo',
 	
 	
+	  handleError: function handleError() {},
+	
 	  render: function render() {
 	
 	    var imgsrc = "../../../public/imgs/profilepics/large/" + this.props.id + ".png";
+	    var altsrc = "../../../public/imgs/profilepics/large/default-large.svg";
 	
 	    return _react2.default.createElement(
 	      'div',
 	      { id: 'playerprofile', className: 'playerprofile' },
-	      _react2.default.createElement('img', { src: imgsrc }),
-	      this.props.name
+	      _react2.default.createElement('img', { src: imgsrc, onError: function onError(e) {
+	          e.target.src = altsrc;
+	        }, className: 'playerprofpic' }),
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'playerinfosection', className: 'playerinfosection' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'playername' },
+	          this.props.name
+	        )
+	      )
 	    );
 	  }
 	

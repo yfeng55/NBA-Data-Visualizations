@@ -125,6 +125,18 @@ var ChartUtil = {
         }    
     },
 
+    getScoringBreakdownLabel: function(index){
+        switch(index){
+            case 27:
+                return "Points from 2pt FGs";
+            case 13:
+                return "Points from 3pt FGs";
+            case 16:
+                return "Points from FTs";
+            default:
+                return "ERROR";
+        }
+    },
 
 
     containsPosition: function(position, selected_position){

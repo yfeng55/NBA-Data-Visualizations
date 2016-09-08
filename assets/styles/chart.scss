@@ -130,6 +130,8 @@
 	&:focus{
 		outline: none;
 	}
+	z-index: 10;
+	position: relative;
 }
 .charttab.selected{
 	font-weight: bold;
@@ -180,11 +182,25 @@
 }
 
 .individual-filters-container .select-filter{
-	margin-left: 230px;
+    margin-left: 230px;
+    top: -30;
+    position: relative;
 }
 
+.playerprofpic{
+	position: relative;
+    z-index: 0;
+}
 
+.playerinfosection{
+	position: relative;
+    left: 230;
+    bottom: 150;
 
+    .playername{
+    	font-size: 20px;
+    }
+}
 
 
 

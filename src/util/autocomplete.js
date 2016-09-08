@@ -45,6 +45,7 @@ let Autocomplete = React.createClass({
         fontSize: '90%',
         position: 'fixed',
         overflow: 'auto',
+        zIndex: '5000',
         maxHeight: '50%', // TODO: don't cheat, let it flow to the bottom
       },
       autoHighlight: true,

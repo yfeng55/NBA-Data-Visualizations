@@ -14,7 +14,7 @@ var PlayerIndividualStats = React.createClass({
 	getInitialState: function (){
 
 		var c = function(x) {
-			var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#009BFF", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+			var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#009BFF", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#39e600", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
 			return colors[x % colors.length];
 		}
 
@@ -276,17 +276,18 @@ var PlayerIndividualStats = React.createClass({
 					divcontent += "<p><b>" + d.gamedate + "</b></p>";
 					var total = 0;
 					d.values.forEach(function(val){ 
-						var tooltiplabel = (chartUtil.getStatKeyFromIndexInGamelog(val.type) == "Points") ? "2 Point FGs" : chartUtil.getStatKeyFromIndexInGamelog(val.type);
+						var tooltiplabel = chartUtil.getScoringBreakdownLabel(val.type);
 						divcontent += tooltiplabel + ": " + val.count + "<br/>" 
 						total += val.count;
 					}.bind(this));
-					divcontent += "<br/>Total: " + total;
+					divcontent += "<br/>Total Points: " + total;
 
 
 					div.style("opacity", 0.8);
 					div.html(divcontent)
-						.style("left", (d3.event.pageX - 100) + "px")
+						.style("left", (d3.event.pageX - 150) + "px")
 						.style("top", (d3.event.pageY - 58) + "px")
+						.style("width", 150)
 				})
 				.on("mouseout", function(){
 					div.style("opacity", 0);
@@ -299,7 +300,7 @@ var PlayerIndividualStats = React.createClass({
 				.attr("width", bar_w)
 				.attr("y", function(d) {return y(d.count + d.y1); })
 				.attr("height", function(d){ return h - y(d.count) })
-				.style("fill", function(d){ return c(d.type) })
+				.style("fill", function(d){ console.log(c(d.type)); return c(d.type) })
 
 	},
 
@@ -362,7 +363,7 @@ var PlayerIndividualStats = React.createClass({
 
 		return (
 			<div>
-				<h3 className="inline-header">Player Stats: </h3>
+				<h3 className="inline-header">Player Search: </h3>
 
 				<Autocomplete
 					value={this.state.value}
@@ -388,7 +389,7 @@ var PlayerIndividualStats = React.createClass({
 					</div>
 
 					<button id="percentage-tab" className={percentTabClass} onClick={this.onSwitchTabs}>Counting Stats</button>
-					<button id="volume-tab" className={volumeTabClass} onClick={this.onSwitchTabs}>Breakdown</button>
+					<button id="volume-tab" className={volumeTabClass} onClick={this.onSwitchTabs}>Scoring Breakdown</button>
 					<div id="chart2-individualstats" className="chart"></div>
 					{filters}
 				</div>
