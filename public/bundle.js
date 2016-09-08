@@ -27015,6 +27015,16 @@
 	          )
 	        ),
 	        _react2.default.createElement('div', { id: 'chart1-3andd', className: 'chart' })
+	      ),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'em',
+	          null,
+	          '• point size is a function of a player\'s minutes per game: radius = mpg/30 * 7 + 1 '
+	        )
 	      )
 	    );
 	  }
@@ -37518,6 +37528,25 @@
 	          )
 	        ),
 	        _react2.default.createElement('div', { id: 'chart1-3andd', className: 'chart' })
+	      ),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'em',
+	          null,
+	          '• point size is a function of a player\'s minutes per game: radius = mpg/30 * 7 + 1 '
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'em',
+	          null,
+	          '• missing salary information for some players causes some points to show up as 0'
+	        )
 	      )
 	    );
 	  }

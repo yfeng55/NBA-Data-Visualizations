@@ -393,6 +393,7 @@ var PlayerIndividualStats = React.createClass({
 					<div id="chart2-individualstats" className="chart"></div>
 					{filters}
 				</div>
+
 			</div>
 		);
 	}

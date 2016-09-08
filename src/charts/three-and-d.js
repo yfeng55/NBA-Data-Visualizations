@@ -262,6 +262,8 @@ var ThreeAndD = React.createClass({
         
         </div>
 
+        <br/>
+        <p><em>&bull; point size is a function of a player's minutes per game: radius = mpg/30 * 7 + 1 </em></p>
 
       </div>
     );
